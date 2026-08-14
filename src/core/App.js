@@ -157,8 +157,8 @@ export class App {
       this.villa.lineUniforms.uOpacity.value = clamp(1 - smooth(0.12, 0.6, l1), 0, 1);
     }
 
-    /* éclaté par lots, aller-retour */
-    const e = smooth(0.08, 0.46, l2) * (1 - smooth(0.62, 0.94, l2));
+    /* éclaté par lots, aller-retour — il attend que la caméra ait pris du recul */
+    const e = smooth(0.17, 0.5, l2) * (1 - smooth(0.62, 0.94, l2));
     this.villa.setExplode(e);
     this.lots.update(e);
     this.annos.update(l2);
