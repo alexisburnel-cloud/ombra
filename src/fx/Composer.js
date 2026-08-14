@@ -78,7 +78,7 @@ export class Post {
   render(time, { dim = 0, night = 0 } = {}) {
     this.pass.uniforms.uTime.value = time;
     this.pass.uniforms.uDim.value = dim;
-    this.pass.uniforms.uGrain.value = 0.045 + night * 0.04;
+    this.pass.uniforms.uGrain.value = 0.03 + night * 0.035;
     this.composer.render();
   }
 }

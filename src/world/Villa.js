@@ -64,10 +64,10 @@ export class Villa {
     const muret = mesh(box(12, 1.1, 0.45), mats.drystone, -16, 0.55, 6.8);
     gFini.add(muret); addEdges(muret);
 
-    /* terrasse sud (dalles béton lissé) */
-    gFini.add(mesh(box(26, 0.14, 4.6), mats.beton, -3, 0.07, 5.2 - 2.3 + 0.4, { cast: false }));
+    /* terrasse sud (dalles béton lissé) — décollée du terrain */
+    gFini.add(mesh(box(26, 0.14, 4.6), mats.beton, -3, 0.1, 5.2 - 2.3 + 0.4, { cast: false }));
     /* deck du bassin */
-    gFini.add(mesh(box(11.4, 0.14, 6.6), mats.beton, 13.6, 0.07, 1.5, { cast: false }));
+    gFini.add(mesh(box(11.4, 0.14, 6.6), mats.beton, 13.6, 0.1, 1.5, { cast: false }));
     this.group.add(gFini);
 
     /* bassin à débordement */
@@ -100,14 +100,14 @@ export class Villa {
     const pE3 = mesh(box(0.5, 0.55, 3.4), mats.enduit, 5.75, 3.28, 0.4);
     const pE4 = mesh(box(0.5, 0.4, 3.4), mats.enduit, 5.75, 0.55, 0.4);
     gMurs.add(pE1, pE2, pE3, pE4); addEdges(pE1);
-    /* mur nord (enduit) */
-    const nord = mesh(box(20.5, 3.2, 0.5), mats.enduit, -4.4, 1.95, -5.05);
+    /* mur nord (enduit) — s'arrête au porche, qui a son propre mur */
+    const nord = mesh(box(14.0, 3.2, 0.5), mats.enduit, -1.2, 1.95, -5.05);
     gMurs.add(nord); addEdges(nord);
     /* refend & cheminée pierre traversant l'étage — appareillage adapté à la hauteur */
     const chem = mesh(box(1.1, 7.4, 3.4), mats.drystoneTall, 3.4, 3.6, -2.4);
     gMurs.add(chem); addEdges(chem);
-    /* îlot d'entrée nord — chêne chaleureux côté séjour */
-    gMurs.add(mesh(box(3.6, 3.2, 0.5), mats.bois, -10.5, 1.95, -5.05));
+    /* îlot d'entrée nord — panneau de chêne posé en avant du mur */
+    gMurs.add(mesh(box(3.6, 3.05, 0.32), mats.bois, -10.5, 1.9, -4.78));
     this.group.add(gMurs);
 
     /* ═══ PORCHE CATHÉDRALE OUEST (pignon bois + tuiles) ═══ */
@@ -232,8 +232,8 @@ export class Villa {
     gInt.add(mesh(box(1.05, 0.42, 2.1), mats.fabric, -13.6, 0.72, -0.6));
     /* table basse travertin-like */
     gInt.add(mesh(box(1.5, 0.32, 0.85), mats.drystone, -11.4, 0.6, -0.35));
-    /* cheminée dans le voile pierre (foyer) */
-    this.ember = mesh(box(0.06, 0.34, 1.1), mats.ember, 2.82, 1.0, -2.4, { cast: false });
+    /* cheminée — foyer en léger relief sur la face pierre */
+    this.ember = mesh(box(0.06, 0.34, 1.1), mats.ember, 2.78, 1.0, -2.4, { cast: false });
     gInt.add(this.ember);
     /* table à manger + bancs */
     gInt.add(mesh(box(2.6, 0.07, 1.05), mats.noyer, -4.6, 1.08, -0.6));
