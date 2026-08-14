@@ -42,25 +42,25 @@ export class InteriorFX {
 
     this.group = new THREE.Group();
     const shaft = (x, w, tilt) => {
-      const m = new THREE.Mesh(new THREE.PlaneGeometry(w, 5.6), mat);
-      m.position.set(x, 2.3, 1.1);
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(w, 5.2), mat);
+      m.position.set(x, 2.1, 0.6);
       m.rotation.set(-1.02, tilt, 0.08);
       m.renderOrder = 15;
       this.group.add(m);
     };
-    shaft(-2.6, 1.7, 0.1);
-    shaft(0.4, 1.1, 0.16);
-    shaft(3.1, 2.0, 0.05);
+    shaft(-11.6, 1.9, 0.1);
+    shaft(-5.2, 1.2, 0.16);
+    shaft(0.6, 2.1, 0.05);
     scene.add(this.group);
 
-    /* poussière */
+    /* poussière dans la lumière du séjour */
     const N = TIER.dust;
     const pos = new Float32Array(N * 3);
     const seed = new Float32Array(N);
     for (let i = 0; i < N; i++) {
-      pos[i * 3] = -6.5 + Math.random() * 10.5;
-      pos[i * 3 + 1] = 0.6 + Math.random() * 2.8;
-      pos[i * 3 + 2] = -3.6 + Math.random() * 7.4;
+      pos[i * 3] = -14 + Math.random() * 18;
+      pos[i * 3 + 1] = 0.5 + Math.random() * 2.4;
+      pos[i * 3 + 2] = -4 + Math.random() * 6.5;
       seed[i] = Math.random() * 100;
     }
     const geo = new THREE.BufferGeometry();

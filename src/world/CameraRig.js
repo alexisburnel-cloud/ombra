@@ -2,9 +2,9 @@ import * as THREE from 'three';
 import { clamp, lerp, damp, easeInOut, REDUCED } from '../core/utils.js';
 
 /*
-  La caméra comme un réalisateur : une trajectoire Catmull-Rom
-  ancrée aux chapitres, easing par segment, souffle au repos,
-  parallaxe de souris amortie — plus ample à l'intérieur.
+  La caméra comme un réalisateur : trajectoire Catmull-Rom ancrée aux
+  chapitres, easing par segment, souffle au repos, parallaxe amortie.
+  La maison vit autour de (-4.5, 1.6, -1) ; la ferme à rénover à (-34, -16).
 */
 
 const POSE = (pos, tgt, fov, roll = 0) => ({
@@ -15,20 +15,21 @@ const POSE = (pos, tgt, fov, roll = 0) => ({
 
 /* clé : ancrage → [chapitre, fraction locale] */
 export const KEYS = [
-  { at: [0, 0.0], pose: POSE([33, 3.0, 46], [0, 3.2, 0], 30) },
-  { at: [1, 0.0], pose: POSE([27, 2.6, 37], [0, 3.0, 0], 32) },
-  { at: [2, 0.0], pose: POSE([14, 2.8, 36], [0.5, 3.1, 0], 27) },
-  { at: [2, 0.55], pose: POSE([1.0, 3.3, 46], [0.5, 3.3, 0], 21) },
-  { at: [3, 0.15], pose: POSE([26, 8.5, 34], [2.5, 4.6, 0], 26, 0.012) },
-  { at: [3, 0.75], pose: POSE([31, 11, 25], [2.5, 5.0, 0], 26, -0.008) },
-  { at: [4, 0.18], pose: POSE([7.5, 2.1, 10.5], [-2, 2.3, 0], 36) },
-  { at: [4, 0.55], pose: POSE([2.2, 1.95, 3.2], [-4.5, 2.1, -1.2], 44) },
-  { at: [5, 0.0], pose: POSE([0.2, 1.9, 0.4], [4.2, 2.0, -1.4], 46) },
-  { at: [5, 0.9], pose: POSE([1.6, 1.7, 1.4], [4.3, 2.6, -0.6], 44) },
-  { at: [6, 0.25], pose: POSE([-19, 3.8, 27], [0, 3.2, 0], 32) },
-  { at: [7, 0.3], pose: POSE([-28, 5.5, 14], [0, 3.2, 0], 33) },
-  { at: [8, 0.0], pose: POSE([27, 2.8, 40], [0, 3.0, 0], 31) },
-  { at: [8, 1.0], pose: POSE([19, 2.1, 28], [0, 2.8, 0], 33) }
+  { at: [0, 0.0], pose: POSE([40, 24, 58], [0, 0, -6], 36) },
+  { at: [0, 0.85], pose: POSE([27, 9, 36], [-2, 1.4, -1], 33) },
+  { at: [1, 0.15], pose: POSE([18, 3.6, 21], [-4, 1.8, -0.5], 33) },
+  { at: [1, 0.8], pose: POSE([10, 2.1, 14], [-7.5, 2.3, -0.5], 36) },
+  { at: [2, 0.15], pose: POSE([25, 14, 21], [-3, 2.8, -0.5], 27, 0.01) },
+  { at: [2, 0.8], pose: POSE([30, 10, 9], [-3, 3.2, -0.5], 27, -0.008) },
+  { at: [3, 0.12], pose: POSE([4.5, 1.9, 8.5], [-6, 1.9, -1.5], 38) },
+  { at: [3, 0.5], pose: POSE([-2.2, 1.75, 1.0], [-10, 1.85, -1.2], 46) },
+  { at: [3, 0.95], pose: POSE([-7.5, 1.7, 0.4], [-14.5, 2.4, -0.6], 44) },
+  { at: [4, 0.18], pose: POSE([-13, 5, 12], [-31, 2.6, -14], 33) },
+  { at: [4, 0.85], pose: POSE([-21.5, 3.4, -1.5], [-33.5, 2.8, -16], 35) },
+  { at: [6, 0.5], pose: POSE([16, 8, 30], [-4, 1.4, -2], 32) },
+  { at: [9, 0.5], pose: POSE([24, 4.5, 32], [-4, 1.8, -1], 31) },
+  { at: [10, 0.05], pose: POSE([21, 3.2, 28], [-4, 2, -1], 31) },
+  { at: [10, 1.0], pose: POSE([13, 2.0, 17.5], [-5.5, 1.9, -1], 34) }
 ];
 
 export class CameraRig {
@@ -53,7 +54,6 @@ export class CameraRig {
     }, { passive: true });
   }
 
-  /* ranges : [{start, end}] par chapitre, en progression globale */
   bake(ranges) {
     this.stops = KEYS.map(({ at }) => {
       const r = ranges[at[0]];
@@ -79,27 +79,27 @@ export class CameraRig {
     const fov = lerp(KEYS[i].pose.fov, KEYS[i + 1].pose.fov, t);
     const roll = lerp(KEYS[i].pose.roll, KEYS[i + 1].pose.roll, t);
 
-    /* intérieur : entre les clés 7 et 9 */
-    this.interior = clamp((i + t - 6.6) * 1.4, 0, 1) * clamp((9.6 - (i + t)) * 1.4, 0, 1);
+    /* intérieur : autour des clés 6 à 8 (chapitre séjour) */
+    this.interior = clamp((i + t - 5.6) * 1.6, 0, 1) * clamp((9.4 - (i + t)) * 1.6, 0, 1);
 
     /* respiration au repos, avant le premier défilement */
     if (p < 0.003 && !REDUCED) {
-      this._pos.x += Math.sin(time * 0.21) * 0.5;
-      this._pos.y += Math.sin(time * 0.16) * 0.22;
-      this._pos.z += Math.cos(time * 0.18) * 0.4;
+      this._pos.x += Math.sin(time * 0.19) * 0.6;
+      this._pos.y += Math.sin(time * 0.14) * 0.3;
+      this._pos.z += Math.cos(time * 0.16) * 0.5;
     }
 
-    /* recul du sommaire */
+    /* recul du menu */
     this.menuBoost = damp(this.menuBoost, this.menuTarget, 4, dt);
     if (this.menuBoost > 0.001) {
       this._back.subVectors(this._pos, this._tgt).normalize();
-      this._pos.addScaledVector(this._back, this.menuBoost * 7);
-      this._pos.y += this.menuBoost * 2.5;
+      this._pos.addScaledVector(this._back, this.menuBoost * 8);
+      this._pos.y += this.menuBoost * 3;
     }
 
     /* parallaxe souris */
     if (!REDUCED) {
-      const amp = lerp(0.55, 1.15, this.interior);
+      const amp = lerp(0.55, 1.1, this.interior);
       this.mouse.x = damp(this.mouse.x, this.mouse.tx, 3, dt);
       this.mouse.y = damp(this.mouse.y, this.mouse.ty, 3, dt);
       const right = new THREE.Vector3().subVectors(this._tgt, this._pos).cross(this.camera.up).normalize();

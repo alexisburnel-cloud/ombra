@@ -1,77 +1,94 @@
 import * as THREE from 'three';
-import { Water } from './Water.js';
+import { groundY } from './Terrain.js';
 
-/* terrain, lac lointain, arbres stylisés, lignes de crête */
+/* coteaux boisés, pins, chênes verts, crêtes calcaires au loin */
 export class Landscape {
   constructor(scene, mats) {
     this.group = new THREE.Group();
     scene.add(this.group);
 
-    const lawn = new THREE.Mesh(new THREE.PlaneGeometry(620, 110), mats.lawn);
-    lawn.rotation.x = -Math.PI / 2;
-    lawn.position.set(0, -0.01, 8);
-    lawn.receiveShadow = true;
-    this.group.add(lawn);
-
-    /* le lac — au nord, derrière la villa : le soleil s'y couche */
-    this.lake = new Water({ width: 640, depth: 170, calm: 1, scale: 0.14 });
-    this.lake.mesh.position.set(0, 0.02, -130);
-    this.group.add(this.lake.mesh);
-
-    /* crêtes lointaines — longues échines sans about visible */
-    const ridge = (w, h, x, z, r = 0) => {
-      const g = new THREE.CylinderGeometry(h, h * 2.6, w, 7, 1);
+    /* crêtes lointaines — échines douces (Vercors au nord, collines au sud) */
+    const ridge = (w, h, x, y, z, r = 0, sz = 0.32) => {
+      const g = new THREE.CylinderGeometry(h, h * 2.8, w, 18, 1);
       g.rotateZ(Math.PI / 2);
       const m = new THREE.Mesh(g, mats.hill);
-      m.scale.set(1, 1, 0.35);
-      m.position.set(x, -h * 0.15, z);
+      m.scale.set(1, 1, sz);
+      m.position.set(x, y, z);
       m.rotation.y = r;
       this.group.add(m);
     };
-    ridge(320, 7, -120, -60, 0.16);
-    ridge(380, 10, 150, -70, -0.12);
-    ridge(260, 4.5, -20, -52, 0.04);
-    ridge(500, 16, -60, -130, 0.24);
-    ridge(520, 20, 220, -140, -0.2);
+    ridge(420, 30, -40, 8, -185, 0.06);
+    ridge(360, 22, 150, 4, -160, -0.12);
+    ridge(460, 14, -90, -3, 150, 0.05);
+    ridge(560, 24, 180, -5, 200, -0.14);
 
-    /* cyprès — ponctuation verticale */
-    const cypress = (x, z, h, r) => {
+    /* pin sylvestre — fût nu + houppier en plateaux */
+    const pin = (x, z, s = 1, mat = mats.canopy) => {
       const g = new THREE.Group();
-      const c = new THREE.Mesh(new THREE.ConeGeometry(r, h, 7), mats.canopy);
-      c.position.y = h / 2 + 0.3;
-      c.castShadow = true;
-      const t = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.07, 0.5, 5), mats.trunk);
-      t.position.y = 0.2;
-      g.add(c, t);
-      g.position.set(x, 0, z);
+      const y0 = groundY(x, z);
+      const t = new THREE.Mesh(new THREE.CylinderGeometry(0.09 * s, 0.14 * s, 3.4 * s, 6), mats.trunk);
+      t.position.y = 1.7 * s; t.castShadow = true;
+      g.add(t);
+      const c1 = new THREE.Mesh(new THREE.IcosahedronGeometry(1.6 * s, 1), mat);
+      c1.scale.y = 0.42; c1.position.y = 3.6 * s; c1.castShadow = true;
+      const c2 = new THREE.Mesh(new THREE.IcosahedronGeometry(1.1 * s, 1), mat);
+      c2.scale.y = 0.4; c2.position.set(0.5 * s, 4.3 * s, 0.2 * s); c2.castShadow = true;
+      g.add(c1, c2);
+      g.position.set(x, y0 - 0.1, z);
+      g.rotation.y = x * 1.7 + z;
       this.group.add(g);
     };
-    cypress(-19, 4, 6.4, 0.72);
-    cypress(-21.5, 0.5, 5.2, 0.6);
-    cypress(-18, -3, 7.1, 0.8);
-    cypress(24, -8, 5.8, 0.68);
-    cypress(30, 12, 4.6, 0.55);
-
-    /* arbres à canopée — masses horizontales */
-    const tree = (x, z, s) => {
+    /* chêne vert — masse ronde dense */
+    const chene = (x, z, s = 1) => {
       const g = new THREE.Group();
-      const t = new THREE.Mesh(new THREE.CylinderGeometry(0.09 * s, 0.13 * s, 2.1 * s, 6), mats.trunk);
-      t.position.y = 1.05 * s;
-      t.castShadow = true;
-      const c1 = new THREE.Mesh(new THREE.IcosahedronGeometry(1.9 * s, 1), mats.canopy);
-      c1.scale.y = 0.55;
-      c1.position.y = 2.6 * s;
-      c1.castShadow = true;
-      const c2 = new THREE.Mesh(new THREE.IcosahedronGeometry(1.25 * s, 1), mats.canopy);
-      c2.scale.y = 0.5;
-      c2.position.set(1.1 * s, 3.15 * s, 0.4 * s);
-      c2.castShadow = true;
-      g.add(t, c1, c2);
-      g.position.set(x, 0, z);
+      const y0 = groundY(x, z);
+      const t = new THREE.Mesh(new THREE.CylinderGeometry(0.12 * s, 0.17 * s, 1.5 * s, 6), mats.trunk);
+      t.position.y = 0.75 * s; t.castShadow = true;
+      const c = new THREE.Mesh(new THREE.IcosahedronGeometry(1.7 * s, 1), mats.canopySombre);
+      c.scale.y = 0.78; c.position.y = 2.4 * s; c.castShadow = true;
+      g.add(t, c);
+      g.position.set(x, y0 - 0.1, z);
+      g.rotation.y = z * 2.3;
       this.group.add(g);
     };
-    tree(34, -14, 1.25);
-    tree(-21, 15, 1.0);
-    tree(-40, 22, 1.5);
+
+    /* bosquet de pins au nord, derrière la maison et la ferme */
+    pin(-16, -20, 1.5); pin(-10, -17, 1.2); pin(-44, -26, 1.8);
+    pin(-49, -19, 1.3); pin(-40, -30, 1.5); pin(-22, -24, 1.1);
+    /* pins d'accompagnement à l'est, au-delà du bassin */
+    pin(42, -12, 1.6); pin(48, -4, 1.2);
+    /* chênes verts sur le coteau sud */
+    chene(-14, 15, 1.3); chene(30, 14, 1.6); chene(-27, 11, 1.1);
+    chene(9, 21, 1.4); chene(46, 10, 1.0);
+    /* boisement lointain — masses simples sur les pentes */
+    for (let i = 0; i < 26; i++) {
+      const a = (i / 26) * Math.PI * 2;
+      const r = 64 + (i % 5) * 15;
+      const x = Math.cos(a) * r * 1.4;
+      const z = -30 + Math.sin(a) * r;
+      if (Math.abs(x) < 42 && z > -30 && z < 24) continue;
+      const s = 1.6 + (i % 3) * 0.9;
+      const c = new THREE.Mesh(new THREE.IcosahedronGeometry(2.4 * s, 1), (i % 2) ? mats.canopy : mats.canopySombre);
+      c.scale.y = 0.6;
+      c.position.set(x, groundY(x, z) + 1.1 * s, z);
+      this.group.add(c);
+    }
+
+    /* chemin d'accès gravier — serpente depuis l'est jusqu'à la maison */
+    const pathGeo = new THREE.PlaneGeometry(34, 3.2, 30, 3);
+    pathGeo.rotateX(-Math.PI / 2);
+    const pp = pathGeo.attributes.position;
+    for (let i = 0; i < pp.count; i++) {
+      const lx = pp.getX(i), lz = pp.getZ(i);
+      const wx = lx + 40;
+      const wz = lz - 3 + Math.sin(lx * 0.16) * 2.4;
+      pp.setX(i, wx);
+      pp.setZ(i, wz);
+      pp.setY(i, groundY(wx, wz) + 0.05);
+    }
+    pathGeo.computeVertexNormals();
+    const path = new THREE.Mesh(pathGeo, mats.gravier);
+    path.receiveShadow = true;
+    this.group.add(path);
   }
 }

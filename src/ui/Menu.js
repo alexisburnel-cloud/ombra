@@ -14,12 +14,12 @@ export class Menu {
     this.open = false;
     this.busy = false;
 
-    /* filigrane : clone du plan du loader */
-    const plan = $('#loaderPlan');
-    if (plan) {
-      const clone = plan.cloneNode(true);
+    /* filigrane : clone des courbes de niveau du loader */
+    const topo = $('#loaderTopo');
+    if (topo) {
+      const clone = topo.cloneNode(true);
       clone.removeAttribute('id');
-      clone.querySelectorAll('.lp').forEach((p) => {
+      clone.querySelectorAll('.lt').forEach((p) => {
         p.style.strokeDasharray = 'none';
         p.style.strokeDashoffset = '0';
       });

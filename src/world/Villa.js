@@ -4,9 +4,11 @@ import { smooth } from '../core/utils.js';
 import { Water } from './Water.js';
 
 /*
-  Villa Vespera — composition procédurale (mètres)
-  pavillon de verre RDC · dalle en porte-à-faux · volume haut aveugle
-  noyau de travertin traversant · bassin miroir · colonnade bronze
+  Maison de coteau — étude CARÈNE (mètres).
+  Trois volumes : porche cathédrale à l'ouest (pignon, tuiles, plafond bois),
+  corps en pierre sèche au centre, étage bardé bois grisé en attique.
+  Soutènements en galets, terrasse, bassin à débordement vers la vallée.
+  Une aile ancienne à rénover vit plus loin à l'ouest (chapitre Rénover).
 */
 
 const box = (w, h, d) => new THREE.BoxGeometry(w, h, d);
@@ -19,6 +21,19 @@ function mesh(geo, mat, x, y, z, { cast = true, receive = true } = {}) {
   return m;
 }
 
+/* prisme triangulaire pour pignons (largeur w le long de x, pente sur z) */
+function gablePrism(w, halfDepth, rise) {
+  const shape = new THREE.Shape();
+  shape.moveTo(-halfDepth, 0);
+  shape.lineTo(halfDepth, 0);
+  shape.lineTo(0, rise);
+  shape.closePath();
+  const g = new THREE.ExtrudeGeometry(shape, { depth: w, bevelEnabled: false });
+  g.rotateY(-Math.PI / 2);
+  g.translate(w / 2, 0, 0);
+  return g;
+}
+
 export class Villa {
   constructor(scene, mats) {
     this.mats = mats;
@@ -26,174 +41,267 @@ export class Villa {
     scene.add(this.group);
 
     const edgeSources = [];
-    const addEdges = (m, threshold = 20) => edgeSources.push({ mesh: m, threshold });
+    const addEdges = (m, threshold = 25) => edgeSources.push({ mesh: m, threshold });
 
-    /* ── socle ── */
-    const gBase = new THREE.Group();
-    const podium = mesh(box(30, 0.5, 15), mats.travertineFloor, 1, 0.25, 0);
-    gBase.add(podium); addEdges(podium);
-
-    for (let i = 0; i < 3; i++) {
-      const st = mesh(box(6, 0.166, 0.45), mats.travertine, -4, 0.417 - i * 0.166, 7.725 + i * 0.45);
-      gBase.add(st);
-    }
-    const landWall = mesh(box(14, 1.4, 0.35), mats.travertine, 5, 1.2, -6.8);
-    gBase.add(landWall); addEdges(landWall);
-
-    /* ── bassin miroir ── */
-    this.pool = new Water({ width: 9.5, depth: 5, calm: 0, scale: 1.1 });
-    this.pool.mesh.position.set(10.75, 0.507, 3.0);
-    gBase.add(this.pool.mesh);
-    const rimGeo = [
-      box(9.72, 0.035, 0.11), box(9.72, 0.035, 0.11),
-      box(0.11, 0.035, 5.0), box(0.11, 0.035, 5.0)
-    ];
-    const rimPos = [
-      [10.75, 0.517, 0.445], [10.75, 0.517, 5.555],
-      [5.945, 0.517, 3.0], [15.555, 0.517, 3.0]
-    ];
-    rimGeo.forEach((g, i) => gBase.add(mesh(g, mats.bronze, ...rimPos[i], { cast: false })));
-
-    /* ── sol intérieur + tapis ── */
-    const gFurn = new THREE.Group();
-    const rugMat = new THREE.MeshStandardMaterial({ color: 0x373126, roughness: 1, envMapIntensity: 0.12 });
-    rugMat.clippingPlanes = [mats.buildPlane];
-    gFurn.add(mesh(new THREE.BoxGeometry(5.2, 0.02, 3.4), rugMat, -3.4, 0.515, 1.0, { cast: false }));
-
-    /* canapé en L */
-    gFurn.add(mesh(box(3.1, 0.38, 1.05), mats.fabric, -3.4, 0.7, 1.7));
-    gFurn.add(mesh(box(3.1, 0.42, 0.28), mats.fabric, -3.4, 1.05, 2.28));
-    gFurn.add(mesh(box(1.05, 0.38, 2.3), mats.fabric, -5.45, 0.7, 0.75));
-    gFurn.add(mesh(box(1.05, 0.42, 0.28), mats.fabric, -5.84, 1.05, 0.75).rotateY(Math.PI / 2));
-    /* table basse — monolithe travertin */
-    gFurn.add(mesh(box(1.5, 0.34, 0.9), mats.travertine, -2.9, 0.68, 0.7));
-    /* table à manger */
-    gFurn.add(mesh(box(2.6, 0.06, 1.05), mats.oak, 0.3, 1.23, -2.0));
-    gFurn.add(mesh(box(0.07, 0.68, 0.9), mats.darkWood, -0.75, 0.86, -2.0));
-    gFurn.add(mesh(box(0.07, 0.68, 0.9), mats.darkWood, 1.35, 0.86, -2.0));
-    /* suspension */
-    gFurn.add(mesh(new THREE.CylinderGeometry(0.008, 0.008, 1.2, 6), mats.inkMetal, 0.3, 3.08, -2.0, { cast: false }));
-    this.pendant = mesh(new THREE.SphereGeometry(0.11, 20, 14), mats.pendant, 0.3, 2.42, -2.0, { cast: false });
-    gFurn.add(this.pendant);
-    /* étagère basse */
-    gFurn.add(mesh(box(4.2, 0.42, 0.36), mats.oak, -4.6, 0.72, -4.1));
-    /* lampadaire */
-    gFurn.add(mesh(new THREE.CylinderGeometry(0.016, 0.016, 1.62, 6), mats.inkMetal, -7.1, 1.31, -3.6));
-    this.lampHead = mesh(new THREE.SphereGeometry(0.08, 16, 12), mats.pendant, -7.1, 2.16, -3.6, { cast: false });
-    gFurn.add(this.lampHead);
-    /* îlot */
-    gFurn.add(mesh(box(2.3, 0.85, 0.8), mats.travertine, 1.6, 0.925, -3.6));
-
-    /* lambris chêne sur le noyau (face séjour) */
-    gFurn.add(mesh(box(0.06, 3.2, 5), mats.oak, 3.86, 2.1, -1.0));
-    /* foyer */
-    this.ember = mesh(box(0.05, 0.32, 0.95), mats.ember, 3.9, 1.05, -1.2, { cast: false });
-    gFurn.add(this.ember);
-
-    /* ── noyau de travertin ── */
-    const gCore = new THREE.Group();
-    const core = mesh(box(1.2, 8.2, 5), mats.travertine, 4.5, 4.6, -1.0);
-    gCore.add(core); addEdges(core);
-
-    /* ── colonnade bronze ── */
-    const gCols = new THREE.Group();
-    [-7.2, -2.4, 2.4, 7.2].forEach((x) => {
-      gCols.add(mesh(new THREE.CylinderGeometry(0.07, 0.07, 3.2, 12), mats.bronze, x, 2.1, 4.62));
+    /* ═══ NIVEAU BAS — fondations, soutènements, jardin bas ═══ */
+    const gFond = new THREE.Group();
+    [-14, -7.5, 0, 6].forEach((x) => {
+      gFond.add(mesh(box(2.2, 0.6, 8.6), mats.betonBrut, x, -0.5, -1));
     });
+    this.group.add(gFond);
 
-    /* ── enveloppe de verre — 4 parois ── */
-    const H = 3.14, Y = 2.07; // vitrage y 0.5 → 3.64
-    const mullion = (len) => box(0.07, H, 0.07);
-    const rail = (w, d) => box(w, 0.09, d);
+    const gFini = new THREE.Group();
+    /* mur de soutènement galets — front de vallée */
+    const soutien = mesh(box(30, 3.0, 0.6), mats.galets, 3, -1.3, 5.5);
+    gFini.add(soutien); addEdges(soutien);
+    /* retour est du soutènement */
+    gFini.add(mesh(box(0.6, 3.0, 11), mats.galets, 21.8, -1.3, 11));
+    /* escalier vers jardin bas */
+    for (let i = 0; i < 6; i++) {
+      gFini.add(mesh(box(2.4, 0.45, 0.62), mats.beton, -2.6, -0.22 - i * 0.44, 5.6 + i * 0.6));
+    }
+    /* muret paysager pierre sèche, approche ouest */
+    const muret = mesh(box(12, 1.1, 0.45), mats.drystone, -16, 0.55, 6.8);
+    gFini.add(muret); addEdges(muret);
 
-    const makeWall = (opts) => {
+    /* terrasse sud (dalles béton lissé) */
+    gFini.add(mesh(box(26, 0.14, 4.6), mats.beton, -3, 0.07, 5.2 - 2.3 + 0.4, { cast: false }));
+    /* deck du bassin */
+    gFini.add(mesh(box(11.4, 0.14, 6.6), mats.beton, 13.6, 0.07, 1.5, { cast: false }));
+    this.group.add(gFini);
+
+    /* bassin à débordement */
+    this.pool = new Water({ width: 9, depth: 4.6, calm: 0, scale: 1.15 });
+    this.pool.mesh.position.set(13.5, 0.16, 1.4);
+    gFini.add(this.pool.mesh);
+    gFini.add(mesh(box(9.3, 0.1, 0.16), mats.inkMetal, 13.5, 0.1, 3.85, { cast: false }));
+    /* bac débordement visible du jardin bas */
+    gFini.add(mesh(box(9.3, 1.2, 0.3), mats.galets, 13.5, -0.9, 4.1));
+
+    /* ═══ DALLES ═══ */
+    const gDalle = new THREE.Group();
+    const dalleRdc = mesh(box(24.5, 0.35, 9.6), mats.beton, -3.2, 0.18, -1);
+    gDalle.add(dalleRdc); addEdges(dalleRdc);
+    const dalleEtage = mesh(box(11.6, 0.35, 8.2), mats.beton, 1.2, 3.38, -1);
+    gDalle.add(dalleEtage); addEdges(dalleEtage);
+    this.group.add(gDalle);
+
+    /* ═══ MURS — corps pierre + refends + cheminée ═══ */
+    const gMurs = new THREE.Group();
+    /* voile pierre sèche sud (bandeau vitré dedans) : deux linteaux + trumeaux */
+    const voileBas = mesh(box(9.5, 1.0, 0.5), mats.drystone, -0.75, 0.85, 3.15);
+    const voileHaut = mesh(box(9.5, 0.85, 0.5), mats.drystone, -0.75, 2.93, 3.15);
+    gMurs.add(voileBas, voileHaut);
+    addEdges(voileBas); addEdges(voileHaut);
+    [-5.2, -1.6, 2.2].forEach((x) => gMurs.add(mesh(box(0.6, 1.25, 0.5), mats.drystone, x, 1.98, 3.15)));
+    /* pignon est en enduit */
+    const pignonEst = mesh(box(0.5, 3.2, 8.6), mats.enduit, 5.75, 1.95, -1);
+    gMurs.add(pignonEst); addEdges(pignonEst);
+    /* mur nord (enduit) */
+    const nord = mesh(box(20.5, 3.2, 0.5), mats.enduit, -4.4, 1.95, -5.05);
+    gMurs.add(nord); addEdges(nord);
+    /* refend & cheminée pierre traversant l'étage */
+    const chem = mesh(box(1.1, 7.4, 3.4), mats.drystone, 3.4, 3.6, -2.4);
+    gMurs.add(chem); addEdges(chem);
+    /* îlot d'entrée nord */
+    gMurs.add(mesh(box(3.6, 3.2, 0.5), mats.boisGris, -10.5, 1.95, -5.05));
+    this.group.add(gMurs);
+
+    /* ═══ PORCHE CATHÉDRALE OUEST (pignon bois + tuiles) ═══ */
+    const gCharp = new THREE.Group();
+    /* murs latéraux du porche */
+    const porcheN = mesh(box(7.4, 3.0, 0.5), mats.enduit, -12.0, 1.85, -5.05);
+    const porcheS = mesh(box(7.4, 0.5, 0.35), mats.enduit, -12.0, 3.1, 3.3);
+    gCharp.add(porcheN, porcheS); addEdges(porcheN);
+    /* poteaux du porche côté sud */
+    [-15.4, -8.6].forEach((x) => gCharp.add(mesh(box(0.42, 3.35, 0.42), mats.enduit, x, 1.68, 3.3)));
+    /* pignons triangulaires est/ouest */
+    const pigW = new THREE.Mesh(gablePrism(0.5, 4.5, 1.7), mats.enduit);
+    pigW.position.set(-15.85, 3.35, -0.9);
+    pigW.castShadow = true;
+    const pigE = pigW.clone(); pigE.position.x = -8.35;
+    gCharp.add(pigW, pigE);
+    addEdges(pigW);
+    /* plafond bois sous rampants */
+    const rampL = mesh(box(7.9, 0.09, 4.85), mats.bois, -12.05, 4.18, -3.06, { cast: false });
+    rampL.rotation.x = 0.352;
+    const rampR = mesh(box(7.9, 0.09, 4.85), mats.bois, -12.05, 4.18, 1.26, { cast: false });
+    rampR.rotation.x = -0.352;
+    gCharp.add(rampL, rampR);
+    /* pannes de charpente */
+    for (let i = 0; i < 4; i++) {
+      const y = 3.42 + i * 0.4, halfSpan = 4.4 - i * 1.05;
+      gCharp.add(mesh(box(7.6, 0.14, 0.14), mats.charpente, -12.05, y, -0.9 - halfSpan, { cast: false }));
+      gCharp.add(mesh(box(7.6, 0.14, 0.14), mats.charpente, -12.05, y, -0.9 + halfSpan, { cast: false }));
+    }
+    this.group.add(gCharp);
+
+    /* ═══ ÉTAGE — attique bardé bois grisé ═══ */
+    const gEtage = new THREE.Group();
+    const etage = mesh(box(11.0, 2.55, 7.4), mats.boisGris, 1.2, 4.85, -1.2);
+    gEtage.add(etage); addEdges(etage);
+    /* bandeau vitré filant sud de l'étage */
+    const ruban = new THREE.Mesh(box(9.6, 1.1, 0.06), mats.glass);
+    ruban.position.set(1.2, 4.95, 2.53);
+    gEtage.add(ruban);
+    [-2.4, 0, 2.4, 4.6].forEach((x) => gEtage.add(mesh(box(0.08, 1.1, 0.1), mats.alu, 1.2 + x - 1.1, 4.95, 2.53, { cast: false })));
+    this.group.add(gEtage);
+
+    /* ═══ COUVERTURES ═══ */
+    const gCouv = new THREE.Group();
+    /* toit du porche — deux rampants de tuiles */
+    const couvL = mesh(box(8.3, 0.12, 5.1), mats.tuiles, -12.05, 4.47, -3.18);
+    couvL.rotation.x = 0.352;
+    const couvR = mesh(box(8.3, 0.12, 5.1), mats.tuiles, -12.05, 4.47, 1.38);
+    couvR.rotation.x = -0.352;
+    gCouv.add(couvL, couvR);
+    addEdges(couvL); addEdges(couvR);
+    /* faîtière */
+    gCouv.add(mesh(box(8.3, 0.14, 0.3), mats.inkMetal, -12.05, 5.28, -0.9, { cast: false }));
+    /* toit plat du corps central (acrotère) */
+    const acro = mesh(box(14.6, 0.4, 9.0), mats.enduit, -1.2, 3.5, -1);
+    gCouv.add(acro); addEdges(acro);
+    /* toiture étage — dalle fine débordante */
+    const toitEtage = mesh(box(11.9, 0.28, 8.2), mats.beton, 1.2, 6.3, -1.2);
+    gCouv.add(toitEtage); addEdges(toitEtage);
+    /* casquette sud de l'étage */
+    gCouv.add(mesh(box(11.9, 0.14, 1.4), mats.beton, 1.2, 6.24, 3.2, { cast: true }));
+    this.group.add(gCouv);
+
+    /* ═══ MENUISERIES — baies vitrées ═══ */
+    const H = 2.62, Y = 1.66;
+    const gMenui = new THREE.Group();
+    const makeBay = (w, x, z, withDoor = false) => {
       const g = new THREE.Group();
-      const { axis, at, from, to, posts, pane } = opts;
-      posts.forEach((p) => {
-        const m = new THREE.Mesh(mullion(), this.mats.bronze);
-        m.castShadow = true;
-        if (axis === 'z') m.position.set(p, Y, at); else m.position.set(at, Y, p);
-        g.add(m);
-      });
-      const railLen = to - from;
-      [0.545, 3.6].forEach((ry) => {
-        const r = new THREE.Mesh(axis === 'z' ? rail(railLen, 0.09) : rail(0.09, railLen), this.mats.bronze);
-        if (axis === 'z') r.position.set((from + to) / 2, ry, at); else r.position.set(at, ry, (from + to) / 2);
-        g.add(r);
-      });
-      if (pane !== false) {
-        const p = new THREE.Mesh(
-          axis === 'z' ? box(railLen, H, 0.025) : box(0.025, H, railLen),
-          this.mats.glass
-        );
-        if (axis === 'z') p.position.set((from + to) / 2, Y, at); else p.position.set(at, Y, (from + to) / 2);
-        p.castShadow = false;
-        g.add(p);
-        addEdges(p, 80);
+      const pane = new THREE.Mesh(box(w, H, 0.05), mats.glass);
+      pane.position.set(x, Y, z);
+      g.add(pane);
+      addEdges(pane, 80);
+      const n = Math.round(w / 1.15);
+      for (let i = 0; i <= n; i++) {
+        g.add(mesh(box(0.07, H, 0.09), mats.alu, x - w / 2 + (w * i) / n, Y, z, { cast: false }));
       }
+      g.add(mesh(box(w, 0.1, 0.09), mats.alu, x, 0.4, z, { cast: false }));
+      g.add(mesh(box(w, 0.09, 0.09), mats.alu, x, 2.94, z, { cast: false }));
       return g;
     };
-
-    /* façade sud — avec porte coulissante */
-    const gGlassF = new THREE.Group();
-    gGlassF.add(makeWall({ axis: 'z', at: 4.5, from: -8, to: 0, posts: [-8, -5.33, -2.67, 0], pane: true }));
-    gGlassF.add(makeWall({ axis: 'z', at: 4.5, from: 2.67, to: 8, posts: [2.67, 5.33, 8], pane: true }));
+    /* grande baie du séjour cathédrale (sous le pignon) */
+    gMenui.add(makeBay(6.9, -12.0, 2.0));
+    /* pignon ouest vitré — la vallée entre dans le séjour */
+    const bayW = makeBay(8.2, 0, 0);
+    bayW.rotation.y = Math.PI / 2;
+    bayW.position.set(-15.45, 0, -1.05);
+    gMenui.add(bayW);
+    gMenui.add(mesh(box(0.4, 0.5, 8.6), mats.enduit, -15.55, 3.1, -1.05, { cast: false }));
+    /* baie coulissante du séjour (sous le voile pierre) */
     this.door = new THREE.Group();
-    const doorPane = new THREE.Mesh(box(2.67, H, 0.025), mats.glass);
-    doorPane.position.set(1.335, Y, 4.44);
-    const doorFrameV1 = new THREE.Mesh(box(0.06, H, 0.06), mats.inkMetal);
-    doorFrameV1.position.set(0.03, Y, 4.44);
-    const doorFrameV2 = doorFrameV1.clone();
-    doorFrameV2.position.x = 2.64;
-    this.door.add(doorPane, doorFrameV1, doorFrameV2);
-    gGlassF.add(this.door);
+    const doorPane = new THREE.Mesh(box(2.9, H, 0.05), mats.glass);
+    doorPane.position.set(-6.6, Y, 3.05);
+    const doorFrame = mesh(box(2.9, 0.09, 0.09), mats.alu, -6.6, 2.94, 3.05, { cast: false });
+    const doorPost1 = mesh(box(0.08, H, 0.1), mats.alu, -8.0, Y, 3.05, { cast: false });
+    const doorPost2 = mesh(box(0.08, H, 0.1), mats.alu, -5.2, Y, 3.05, { cast: false });
+    this.door.add(doorPane, doorFrame, doorPost1, doorPost2);
+    gMenui.add(this.door);
+    /* bandeau vitré dans le voile pierre */
+    const bandeau = new THREE.Mesh(box(9.3, 1.15, 0.05), mats.glass);
+    bandeau.position.set(-0.75, 1.98, 3.05);
+    gMenui.add(bandeau);
+    /* volet coulissant bois devant le bandeau */
+    this.volet = mesh(box(2.3, 1.3, 0.07), mats.bois, 1.6, 1.98, 3.42);
+    gMenui.add(this.volet);
+    /* baie pignon est */
+    const bayE = makeBay(3.4, 0, 0);
+    bayE.rotation.y = Math.PI / 2;
+    bayE.position.set(5.55, 0, 0.4);
+    gMenui.add(bayE);
+    this.group.add(gMenui);
 
-    const gGlassB = makeWall({ axis: 'z', at: -4.5, from: -8, to: 8, posts: [-8, -5.33, -2.67, 0, 2.67, 5.33, 8] });
-    const gGlassW = makeWall({ axis: 'x', at: -8, from: -4.5, to: 4.5, posts: [-4.5, -1.5, 1.5, 4.5] });
-    const gGlassE = makeWall({ axis: 'x', at: 8, from: -4.5, to: 4.5, posts: [-4.5, -1.5, 1.5, 4.5] });
-
-    /* ── dalle intermédiaire ── */
-    const gSlab = new THREE.Group();
-    const slab = mesh(box(18, 0.4, 10.4), mats.concrete, 0, 3.9, 0);
-    gSlab.add(slab); addEdges(slab);
-    /* sous-face chêne du débord (plafond terrasse) */
-    gSlab.add(mesh(box(17.9, 0.03, 10.3), mats.oak, 0, 3.685, 0, { cast: false }));
-
-    /* ── volume haut — bandeau vitré filant ── */
-    const gUpper = new THREE.Group();
-    const up = (w, h, d, x, y, z) => { const m = mesh(box(w, h, d), mats.concrete, x, y, z); gUpper.add(m); return m; };
-    up(12, 1.2, 6.5, -4.5, 4.7, -1.0);            // bande basse
-    up(12, 1.0, 6.5, -4.5, 6.6, -1.0);            // bande haute
-    up(0.36, 0.8, 6.5, -10.32, 5.7, -1.0);        // about ouest
-    up(0.36, 0.8, 6.5, 1.32, 5.7, -1.0);          // about est
-    up(12, 0.8, 0.3, -4.5, 5.7, -4.1);            // remplissage nord
-    const ribbon = new THREE.Mesh(box(11.2, 0.8, 0.025), mats.glass);
-    ribbon.position.set(-4.5, 5.7, 2.1);
-    gUpper.add(ribbon);
-    /* volume d'édition pour les arêtes */
-    const upperProxy = mesh(box(12, 3.0, 6.5), mats.concrete, -4.5, 5.6, -1.0);
-    upperProxy.visible = false;
-    gUpper.add(upperProxy); addEdges(upperProxy);
-
-    /* ── toiture ── */
-    const gRoof = new THREE.Group();
-    const roof = mesh(box(13.6, 0.35, 8.0), mats.concrete, -4.5, 7.28, -1.0);
-    gRoof.add(roof); addEdges(roof);
-
-    this.group.add(gBase, gFurn, gCore, gCols, gGlassF, gGlassB, gGlassW, gGlassE, gSlab, gUpper, gRoof);
+    /* ═══ INTÉRIEUR — séjour traversant meublé ═══ */
+    const gInt = new THREE.Group();
+    /* sol intérieur béton ciré */
+    gInt.add(mesh(box(19.6, 0.04, 8.0), mats.beton, -4.4, 0.38, -1, { cast: false }));
+    /* tapis */
+    gInt.add(mesh(box(4.6, 0.03, 3.2), mats.fabricDark, -11.6, 0.42, -0.6, { cast: false }));
+    /* canapé en L face au paysage */
+    gInt.add(mesh(box(3.4, 0.42, 1.05), mats.fabric, -11.9, 0.72, -1.9));
+    gInt.add(mesh(box(3.4, 0.48, 0.3), mats.fabric, -11.9, 1.12, -2.32));
+    gInt.add(mesh(box(1.05, 0.42, 2.1), mats.fabric, -13.6, 0.72, -0.6));
+    /* table basse travertin-like */
+    gInt.add(mesh(box(1.5, 0.32, 0.85), mats.drystone, -11.4, 0.6, -0.35));
+    /* cheminée dans le voile pierre (foyer) */
+    this.ember = mesh(box(0.06, 0.34, 1.1), mats.ember, 2.82, 1.0, -2.4, { cast: false });
+    gInt.add(this.ember);
+    /* table à manger + bancs */
+    gInt.add(mesh(box(2.6, 0.07, 1.05), mats.noyer, -4.6, 1.08, -0.6));
+    gInt.add(mesh(box(0.09, 0.66, 0.9), mats.inkMetal, -5.7, 0.72, -0.6));
+    gInt.add(mesh(box(0.09, 0.66, 0.9), mats.inkMetal, -3.5, 0.72, -0.6));
+    gInt.add(mesh(box(2.2, 0.05, 0.32), mats.noyer, -4.6, 0.62, 0.35, { cast: false }));
+    gInt.add(mesh(box(2.2, 0.05, 0.32), mats.noyer, -4.6, 0.62, -1.55, { cast: false }));
+    /* cuisine — îlot + linéaire nord */
+    gInt.add(mesh(box(2.8, 0.92, 1.05), mats.noyer, 0.9, 0.87, -0.4));
+    gInt.add(mesh(box(2.95, 0.06, 1.15), mats.beton, 0.9, 1.36, -0.4, { cast: false }));
+    gInt.add(mesh(box(4.6, 0.95, 0.7), mats.inkMetal, 0.4, 0.9, -4.55));
+    gInt.add(mesh(box(4.6, 1.15, 0.35), mats.noyer, 0.4, 2.6, -4.72, { cast: false }));
+    /* suspensions au-dessus de l'îlot */
+    this.pendants = [];
+    [-0.1, 0.9, 1.9].forEach((x) => {
+      gInt.add(mesh(new THREE.CylinderGeometry(0.006, 0.006, 1.15, 5), mats.inkMetal, x, 2.75, -0.4, { cast: false }));
+      const p = mesh(new THREE.SphereGeometry(0.09, 16, 12), mats.pendant, x, 2.14, -0.4, { cast: false });
+      this.pendants.push(p);
+      gInt.add(p);
+    });
+    /* bibliothèque basse + plante */
+    gInt.add(mesh(box(3.4, 0.5, 0.35), mats.noyer, -8.2, 0.68, -4.6));
+    gInt.add(mesh(new THREE.CylinderGeometry(0.22, 0.28, 0.5, 8), mats.betonBrut, -14.6, 0.68, -3.9));
+    gInt.add(mesh(new THREE.IcosahedronGeometry(0.55, 1), mats.plante, -14.6, 1.45, -3.9));
+    /* mobilier extérieur sous le porche */
+    gInt.add(mesh(box(1.9, 0.34, 0.85), mats.boisGris, -12.4, 0.6, 1.2));
+    gInt.add(mesh(box(0.8, 0.38, 0.8), mats.fabric, -10.6, 0.62, 1.6));
+    /* lit à l'étage (aperçu par le bandeau) */
+    gInt.add(mesh(box(2.1, 0.4, 1.7), mats.fabric, 0.2, 4.0, -2.2));
+    gInt.add(mesh(box(2.1, 0.9, 0.12), mats.noyer, 0.2, 4.2, -3.1));
+    this.group.add(gInt);
 
     this.parts = {
-      base: gBase, furniture: gFurn, core: gCore, columns: gCols,
-      glassF: gGlassF, glassB: gGlassB, glassW: gGlassW, glassE: gGlassE,
-      slab: gSlab, upper: gUpper, roof: gRoof
+      fond: gFond, dalle: gDalle, murs: gMurs, charp: gCharp,
+      etage: gEtage, couv: gCouv, menui: gMenui, fini: gFini, interieur: gInt
     };
-    this.doorPane = doorPane;
-    this.doorBaseX = this.door.position.x;
-
     this.base = {};
     for (const [k, g] of Object.entries(this.parts)) this.base[k] = g.position.clone();
+    this.doorBaseX = this.door.position.x;
+    this.voletBaseX = this.volet.position.x;
 
-    /* ── arêtes — le trait de lumière ── */
+    /* ═══ AILE ANCIENNE À RÉNOVER (ouest, sur le coteau) ═══ */
+    this.renov = new THREE.Group();
+    this.renov.position.set(-34, 0, -16);
+    const old1 = mesh(box(9, 3.4, 6.2), mats.vieillePierre, 0, 1.7, 0);
+    const oldPigW = new THREE.Mesh(gablePrism(9, 3.1, 1.9), mats.vieillePierre);
+    oldPigW.position.set(-4.5, 3.4, 0); oldPigW.castShadow = true;
+    this.renov.add(old1, oldPigW);
+    addEdges(old1);
+    /* toiture neuve (descend pendant l'assemblage) */
+    this.renovRoof = new THREE.Group();
+    const rL = mesh(box(9.8, 0.1, 3.75), mats.tuiles, 0, 4.42, -1.62); rL.rotation.x = 0.55;
+    const rR = mesh(box(9.8, 0.1, 3.75), mats.tuiles, 0, 4.42, 1.62); rR.rotation.x = -0.55;
+    this.renovRoof.add(rL, rR);
+    this.renovRoof.add(mesh(box(9.8, 0.12, 0.26), mats.inkMetal, 0, 5.32, 0, { cast: false }));
+    this.renov.add(this.renovRoof);
+    /* extension contemporaine (glisse depuis l'est) */
+    this.renovExt = new THREE.Group();
+    const extDalle = mesh(box(6.2, 0.3, 5.4), mats.beton, 7.2, 0.15, 0.2);
+    const extToit = mesh(box(6.6, 0.28, 5.8), mats.beton, 7.2, 3.3, 0.2);
+    const extGlass = new THREE.Mesh(box(5.6, 2.7, 0.05), mats.glass);
+    extGlass.position.set(7.2, 1.7, 2.6);
+    const extFond = mesh(box(6.2, 3.0, 0.4), mats.boisGris, 7.2, 1.8, -2.3);
+    [4.6, 7.2, 9.8].forEach((x) => this.renovExt.add(mesh(box(0.14, 3.0, 0.14), mats.alu, x, 1.8, 2.6, { cast: false })));
+    this.renovExt.add(extDalle, extToit, extGlass, extFond);
+    addEdges(extToit);
+    this.renov.add(this.renovExt);
+    this.renovExtBase = this.renovExt.position.clone();
+    this.renovRoofBase = this.renovRoof.position.clone();
+    this.group.add(this.renov);
+
+    /* ═══ ARÊTES — le trait de lumière ═══ */
     this.group.updateMatrixWorld(true);
     const edgeGeos = edgeSources.map(({ mesh: m, threshold }) => {
       const e = new THREE.EdgesGeometry(m.geometry, threshold);
@@ -206,7 +314,7 @@ export class Villa {
     this.lineUniforms = {
       uProgress: { value: 0 },
       uOpacity: { value: 1 },
-      uColor: { value: new THREE.Color(0xd9ad6c) }
+      uColor: { value: new THREE.Color(0x4fd39a) }
     };
     const lineMat = new THREE.ShaderMaterial({
       uniforms: this.lineUniforms,
@@ -214,7 +322,7 @@ export class Villa {
         varying float vT;
         void main() {
           vec3 w = (modelMatrix * vec4(position, 1.0)).xyz;
-          vT = clamp((w.x + w.z * 0.7 + w.y * 2.2 + 16.0) / 44.0, 0.0, 1.0);
+          vT = clamp((w.x + w.z * 0.6 + w.y * 2.4 + 42.0) / 78.0, 0.0, 1.0);
           gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
         }`,
       fragmentShader: /* glsl */ `
@@ -224,7 +332,7 @@ export class Villa {
         uniform vec3 uColor;
         void main() {
           if (vT > uProgress) discard;
-          float tip = smoothstep(0.06, 0.0, uProgress - vT) * 2.4;
+          float tip = smoothstep(0.05, 0.0, uProgress - vT) * 2.2;
           float a = (0.5 + tip) * uOpacity;
           gl_FragColor = vec4(uColor * (1.0 + tip), a);
         }`,
@@ -236,38 +344,52 @@ export class Villa {
     this.lines.renderOrder = 20;
     scene.add(this.lines);
 
-    /* ── éclairage intérieur nocturne ── */
-    this.innerLight = new THREE.PointLight(0xffb877, 0, 16, 1.8);
-    this.innerLight.position.set(-1, 2.7, 0);
+    /* éclairage intérieur du soir */
+    this.innerLight = new THREE.PointLight(0xffb877, 0, 20, 1.8);
+    this.innerLight.position.set(-4, 2.4, -1);
     scene.add(this.innerLight);
-    this.emberLight = new THREE.PointLight(0xff8a3a, 0, 7, 2);
-    this.emberLight.position.set(3.4, 1.1, -1.2);
-    scene.add(this.emberLight);
+    this.porchLight = new THREE.PointLight(0xffa860, 0, 12, 2);
+    this.porchLight.position.set(-12, 2.6, 0);
+    scene.add(this.porchLight);
   }
 
-  /* e : éclaté 0..1 — chorégraphie par couche */
+  /* e : éclaté par lots, 0..1 — chorégraphie de coordination */
   setExplode(e) {
     const p = this.parts, b = this.base;
-    const s = (d) => smooth(d, d + 0.55, e);
-    p.roof.position.y = b.roof.y + s(0.0) * 5.0;
-    p.upper.position.y = b.upper.y + s(0.09) * 3.3;
-    p.slab.position.y = b.slab.y + s(0.18) * 1.75;
-    p.glassF.position.z = b.glassF.z + s(0.27) * 3.4;
-    p.glassB.position.z = b.glassB.z - s(0.27) * 3.4;
-    p.glassW.position.x = b.glassW.x - s(0.33) * 3.4;
-    p.glassE.position.x = b.glassE.x + s(0.33) * 3.4;
+    const s = (d) => smooth(d, d + 0.5, e);
+    p.fond.position.y = b.fond.y - s(0.0) * 2.4;
+    p.dalle.position.y = b.dalle.y + s(0.1) * 1.3;
+    p.murs.position.y = b.murs.y + s(0.18) * 2.6;
+    p.charp.position.y = b.charp.y + s(0.28) * 4.2;
+    p.etage.position.y = b.etage.y + s(0.34) * 5.6;
+    p.couv.position.y = b.couv.y + s(0.42) * 7.6;
+    p.menui.position.z = b.menui.z + s(0.26) * 3.6;
+    p.fini.position.z = b.fini.z + s(0.16) * 3.0;
+    p.interieur.position.y = b.interieur.y + s(0.22) * 1.3;
   }
 
   setDoor(t) {
-    this.door.position.x = this.doorBaseX + t * 2.5;
+    this.door.position.x = this.doorBaseX - t * 2.6;
+    this.volet.position.x = this.voletBaseX + t * 2.1;
   }
 
-  /* n : facteur nuit · fill : présence caméra à l'intérieur (bounce diurne) */
+  /* r : assemblage de la rénovation, 0..1 — avant, la ferme attend sans toit */
+  setRenov(r) {
+    this.renovRoof.visible = r > 0.02;
+    this.renovExt.visible = r > 0.02;
+    const roofDrop = 1 - smooth(0.15, 0.6, r);
+    this.renovRoof.position.y = this.renovRoofBase.y + roofDrop * 5.5;
+    const extSlide = 1 - smooth(0.4, 0.9, r);
+    this.renovExt.position.x = this.renovExtBase.x + extSlide * 10;
+    this.renovExt.position.y = this.renovExtBase.y + extSlide * 0.6;
+  }
+
+  /* n : facteur soir · fill : présence caméra à l'intérieur */
   setLights(n, fill = 0) {
-    this.mats.glass.emissiveIntensity = n * 0.1;
-    this.mats.ember.emissiveIntensity = n * 1.6 + fill * 0.25;
-    this.mats.pendant.emissiveIntensity = n * 1.8 + fill * 0.3;
-    this.innerLight.intensity = n * 30 + fill * 7;
-    this.emberLight.intensity = n * 9 + fill * 1.5;
+    this.mats.glass.emissiveIntensity = n * 0.09;
+    this.mats.ember.emissiveIntensity = n * 1.5 + fill * 0.25;
+    this.mats.pendant.emissiveIntensity = n * 1.7 + fill * 0.35;
+    this.innerLight.intensity = n * 34 + fill * 8;
+    this.porchLight.intensity = n * 12 + fill * 2;
   }
 }
