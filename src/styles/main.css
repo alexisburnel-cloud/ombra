@@ -1062,3 +1062,8 @@ main { position: relative; z-index: 10; }
   .mat-fig img, .era-fig img, .member img, .strip img { transition: none; transform: none; }
   * { scroll-behavior: auto !important; }
 }
+
+/* ─────────── orbite 360° ─────────── */
+
+html.is-orbit, html.is-orbit body { cursor: grabbing; }
+canvas { cursor: grab; }

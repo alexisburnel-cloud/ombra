@@ -3,9 +3,12 @@ import { clamp, lerp, damp, easeInOut, REDUCED } from '../core/utils.js';
 
 /*
   La caméra comme un réalisateur : trajectoire Catmull-Rom ancrée aux
-  chapitres, easing par segment, souffle au repos, parallaxe amortie.
-  La maison vit autour de (-4.5, 1.6, -1) ; la ferme à rénover à (-34, -16).
+  chapitres, easing par segment, souffle au repos, parallaxe amortie,
+  orbite 360° au glisser-souris. La maison vit autour de (-4.5, 1.6, -1) ;
+  l'extension à rénover s'accoste au pignon est du garage (≈ 20, -3.6).
 */
+
+const UP = new THREE.Vector3(0, 1, 0);
 
 const POSE = (pos, tgt, fov, roll = 0) => ({
   pos: new THREE.Vector3(...pos),
@@ -27,8 +30,8 @@ export const KEYS = [
   { at: [3, 0.12], pose: POSE([7.5, 2.0, 10.5], [-7, 1.9, -1], 38) },
   { at: [3, 0.5], pose: POSE([-2.4, 1.8, 1.4], [-13, 2.1, -1.2], 46) },
   { at: [3, 0.95], pose: POSE([-10.5, 2.0, 0.8], [-18.6, 2.8, -1.05], 44) },
-  { at: [4, 0.18], pose: POSE([-18, 5.5, 14], [-37, 2.6, -16], 33) },
-  { at: [4, 0.85], pose: POSE([-27.5, 3.6, -4], [-39.5, 2.8, -18], 35) },
+  { at: [4, 0.18], pose: POSE([31, 4.6, 9], [19.5, 1.9, -3.5], 34) },
+  { at: [4, 0.85], pose: POSE([28, 2.7, -10.5], [20, 1.7, -3.3], 36) },
   { at: [6, 0.5], pose: POSE([20, 10, 38], [-3, 1.4, -2], 32) },
   { at: [9, 0.5], pose: POSE([28, 5.5, 38], [-3, 1.8, -1], 31) },
   { at: [10, 0.05], pose: POSE([26, 3.6, 32], [-4, 2, 0], 31) },
@@ -50,11 +53,34 @@ export class CameraRig {
     this._pos = new THREE.Vector3();
     this._tgt = new THREE.Vector3();
     this._back = new THREE.Vector3();
+    this._off = new THREE.Vector3();
+
+    /* orbite 360° : maintenir le clic et glisser pour tourner autour */
+    this.orbit = 0;
+    this.orbitTarget = 0;
+    this._drag = null;
+    this._lastP = 0;
 
     addEventListener('pointermove', (e) => {
       this.mouse.tx = (e.clientX / innerWidth - 0.5) * 2;
       this.mouse.ty = (e.clientY / innerHeight - 0.5) * 2;
+      if (this._drag !== null) {
+        this.orbitTarget += (e.clientX - this._drag) * 0.006;
+        this._drag = e.clientX;
+      }
     }, { passive: true });
+    addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'mouse' && e.button === 0) {
+        this._drag = e.clientX;
+        document.documentElement.classList.add('is-orbit');
+      }
+    }, { passive: true });
+    const endDrag = () => {
+      this._drag = null;
+      document.documentElement.classList.remove('is-orbit');
+    };
+    addEventListener('pointerup', endDrag, { passive: true });
+    addEventListener('pointercancel', endDrag, { passive: true });
   }
 
   bake(ranges) {
@@ -90,6 +116,19 @@ export class CameraRig {
       this._pos.x += Math.sin(time * 0.19) * 0.6;
       this._pos.y += Math.sin(time * 0.14) * 0.3;
       this._pos.z += Math.cos(time * 0.16) * 0.5;
+    }
+
+    /* orbite 360° — se relâche doucement dès que l'on re-défile, coupée en intérieur */
+    if (Math.abs(p - this._lastP) > 0.0004 && this._drag === null) {
+      this.orbitTarget = damp(this.orbitTarget, 0, 2.2, dt);
+    }
+    this._lastP = p;
+    this.orbit = damp(this.orbit, this.orbitTarget, 3.5, dt);
+    const orbitAngle = this.orbit * (1 - this.interior);
+    if (Math.abs(orbitAngle) > 1e-4) {
+      this._off.subVectors(this._pos, this._tgt);
+      this._off.applyAxisAngle(UP, -orbitAngle);
+      this._pos.copy(this._tgt).add(this._off);
     }
 
     /* recul du menu */

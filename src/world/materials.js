@@ -61,9 +61,11 @@ export function makeMaterials() {
   const aluClair = clip(new THREE.MeshStandardMaterial({
     color: 0x8a8d88, roughness: 0.35, metalness: 0.8, envMapIntensity: 0.9
   }));
+  /* verre : présence réelle — reflets d'environnement + teinte légère */
   const glass = clip(new THREE.MeshPhysicalMaterial({
-    color: 0xa8bcb4, transparent: true, opacity: 0.16,
-    roughness: 0.06, metalness: 0, envMapIntensity: 1.5,
+    color: 0x9db8ae, transparent: true, opacity: 0.26,
+    roughness: 0.04, metalness: 0.06, envMapIntensity: 2.6,
+    clearcoat: 0.6, clearcoatRoughness: 0.08,
     side: THREE.DoubleSide, depthWrite: false,
     emissive: 0xffb267, emissiveIntensity: 0
   }));

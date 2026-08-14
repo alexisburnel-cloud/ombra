@@ -1,15 +1,16 @@
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { groundY } from './Terrain.js';
 import { fbm } from '../core/utils.js';
 
 /*
-  Paysage V3 — coteaux boisés de la Drôme.
-  Végétation organique : silhouettes déformées par bruit, échelles et
-  rotations variées, strates (arbres, arbustes, graminées), crêtes
-  lointaines en plans successifs fondus dans la brume.
+  Paysage V4 — belvédère de coteau face au Vercors.
+  Massifs calcaires étagés au nord, parcelle clôturée, pelouse
+  délimitée, massifs plantés, végétation photogrammétrique réelle
+  (Poly Haven, CC0) avec repli procédural si un modèle manque.
 */
 
-/* déforme une géométrie par bruit — feuillages organiques */
 function ruffle(geo, amp, freq, seed = 0) {
   const pos = geo.attributes.position;
   const v = new THREE.Vector3();
@@ -24,165 +25,223 @@ function ruffle(geo, amp, freq, seed = 0) {
   return geo;
 }
 
+/* crête montagneuse : silhouette bruitée extrudée */
+function mountainRange(width, height, jag, seed, color, cliffColor = null) {
+  const N = 64;
+  const shape = new THREE.Shape();
+  shape.moveTo(-width / 2, 0);
+  const crest = [];
+  for (let i = 0; i <= N; i++) {
+    const x = -width / 2 + (i / N) * width;
+    const y = height * (0.35
+      + fbm(i * 0.09 + seed, seed, 4) * 0.55
+      + fbm(i * 0.35 + seed * 2, seed + 5, 3) * jag);
+    crest.push([x, y]);
+    shape.lineTo(x, y);
+  }
+  shape.lineTo(width / 2, 0);
+  shape.closePath();
+  const geo = new THREE.ExtrudeGeometry(shape, { depth: 6, bevelEnabled: false });
+  const mat = new THREE.MeshStandardMaterial({ color, roughness: 1, envMapIntensity: 0 });
+  const g = new THREE.Group();
+  g.add(new THREE.Mesh(geo, mat));
+  /* bande de falaises calcaires sous la crête (signature Vercors) */
+  if (cliffColor) {
+    const cliff = new THREE.Shape();
+    cliff.moveTo(crest[6][0], crest[6][1] * 0.8);
+    for (let i = 6; i <= N - 6; i++) cliff.lineTo(crest[i][0], crest[i][1] - height * 0.02);
+    for (let i = N - 6; i >= 6; i--) cliff.lineTo(crest[i][0], crest[i][1] * (0.72 + fbm(i, seed, 2) * 0.08));
+    cliff.closePath();
+    const cgeo = new THREE.ExtrudeGeometry(cliff, { depth: 6.4, bevelEnabled: false });
+    const cmat = new THREE.MeshStandardMaterial({ color: cliffColor, roughness: 1, envMapIntensity: 0 });
+    const cm = new THREE.Mesh(cgeo, cmat);
+    cm.position.z = -0.2;
+    g.add(cm);
+  }
+  return g;
+}
+
 export class Landscape {
   constructor(scene, mats) {
     this.group = new THREE.Group();
     scene.add(this.group);
 
-    /* crêtes lointaines — échines douces en plans successifs */
-    const ridge = (w, h, x, y, z, r = 0, sz = 0.32) => {
-      const g = new THREE.CylinderGeometry(h, h * 2.8, w, 18, 1);
-      g.rotateZ(Math.PI / 2);
-      const m = new THREE.Mesh(g, mats.hill);
-      m.scale.set(1, 1, sz);
-      m.position.set(x, y, z);
-      m.rotation.y = r;
-      this.group.add(m);
-    };
-    ridge(460, 20, -40, 2, -235, 0.06);
-    ridge(400, 15, 160, 0, -210, -0.12);
-    ridge(460, 11, -90, -5, 185, 0.05);
-    ridge(560, 16, 190, -7, 240, -0.14);
+    /* ═══ LE VERCORS — plans étagés au nord ═══ */
+    const far = mountainRange(900, 120, 0.12, 3, 0x8a95a4, 0xb8bcc0);
+    far.position.set(60, -6, -340);
+    this.group.add(far);
+    const mid = mountainRange(760, 74, 0.16, 7, 0x66788a, 0xa8adad);
+    mid.position.set(-120, -4, -280);
+    this.group.add(mid);
+    const near = mountainRange(680, 40, 0.2, 11, 0x4a5c54);
+    near.position.set(40, -3, -225);
+    this.group.add(near);
+    /* collines douces au sud (vallée de la Drôme) */
+    const south = mountainRange(700, 26, 0.1, 17, 0x5c6a58);
+    south.rotation.y = Math.PI;
+    south.position.set(-60, -6, 260);
+    this.group.add(south);
 
-    /* matériaux de feuillage nuancés (variation de teinte par arbre) */
-    const canopyMats = [
-      mats.canopy,
-      mats.canopySombre,
-      mats.canopy.clone(), mats.canopySombre.clone()
+    /* ═══ VÉGÉTATION RÉELLE (Poly Haven CC0) + replis ═══ */
+    this.pending = [];
+    const draco = new DRACOLoader();
+    draco.setDecoderPath('/draco/');
+    const gltf = new GLTFLoader();
+    gltf.setDRACOLoader(draco);
+
+    const canopyMats = [mats.canopy, mats.canopySombre];
+
+    /* repli procédural en attendant / à défaut du modèle réel */
+    const placeholder = (x, z, s, kind) => {
+      const g = new THREE.Group();
+      const y0 = groundY(x, z);
+      if (kind === 'pin' || kind === 'fir') {
+        const t = new THREE.Mesh(new THREE.CylinderGeometry(0.08 * s, 0.16 * s, 3.6 * s, 7), mats.trunk);
+        t.position.y = 1.8 * s; t.castShadow = true; g.add(t);
+        for (let i = 0; i < 3; i++) {
+          const c = new THREE.Mesh(ruffle(new THREE.IcosahedronGeometry((1.8 - i * 0.4) * s, 2), 0.3, 1.4, x + i), canopyMats[i % 2]);
+          c.scale.y = 0.36; c.position.y = (3.2 + i * 0.8) * s; c.castShadow = true; g.add(c);
+        }
+      } else {
+        const t = new THREE.Mesh(new THREE.CylinderGeometry(0.12 * s, 0.18 * s, 1.5 * s, 7), mats.trunk);
+        t.position.y = 0.75 * s; t.castShadow = true; g.add(t);
+        const c = new THREE.Mesh(ruffle(new THREE.IcosahedronGeometry(1.5 * s, 2), 0.32, 1.1, z), canopyMats[0]);
+        c.scale.y = 0.8; c.position.y = 2.2 * s; c.castShadow = true; g.add(c);
+      }
+      g.position.set(x, y0 - 0.08, z);
+      this.group.add(g);
+      return g;
+    };
+
+    /* charge un modèle réel et remplace ses emplacements */
+    const spots = { pin: [], fir: [], tree: [], small: [], shrub2: [], shrub4: [], fern: [], boulder: [], potted: [], planter: [] };
+    const real = (name, list, scale = 1) => {
+      gltf.load(`/models-opt/${name}.glb`, (g) => {
+        const src = g.scene;
+        src.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+        list.forEach(({ x, z, s, y, rot, ph }) => {
+          const inst = src.clone(true);
+          inst.scale.setScalar(s * scale);
+          inst.rotation.y = rot;
+          inst.position.set(x, y !== null ? y : groundY(x, z) - 0.04, z);
+          this.group.add(inst);
+          if (ph) { this.group.remove(ph); }
+        });
+      }, undefined, () => { /* modèle absent : le repli reste en place */ });
+    };
+
+    const put = (kind, x, z, s = 1, y = null) => {
+      const ph = (kind === 'pin' || kind === 'fir' || kind === 'tree' || kind === 'small')
+        ? placeholder(x, z, s, kind) : null;
+      spots[kind].push({ x, z, s, y, rot: (x * 7.3 + z * 3.1) % (Math.PI * 2), ph });
+    };
+
+    /* pins autour du belvédère nord */
+    put('pin', -18, -22, 1.4); put('pin', -46, -26, 1.7); put('pin', 26, -21, 1.3);
+    put('pin', 44, -15, 1.5); put('fir', -11, -19, 1.1); put('fir', -52, -18, 1.4);
+    /* feuillus du jardin et du coteau */
+    put('tree', 21, -12.6, 1.0); /* ombrage de la cour */
+    put('tree', -16, 17, 1.2); put('tree', 33, 16, 1.4); put('small', -29, 12, 1.1);
+    put('small', 49, 10, 1.0); put('tree', -39, 19, 1.2);
+    /* arbustes en massifs — le long des terrasses et de la cour */
+    [[-20.8, 4.6], [-21.4, 7.4], [7.2, 8.0], [20.6, 7.4], [26.8, -3.6],
+     [6.8, -7.0], [27.6, -13.2], [-24, 10.5]].forEach(([x, z]) => put('shrub2', x, z, 1.1));
+    [[-18.6, 9.4], [21.8, 6.6], [8.4, -6.4], [24.4, -13.6]].forEach(([x, z]) => put('shrub4', x, z, 1));
+    /* fougères à l'ombre nord */
+    [[-9, -7.2], [-14.5, -7.4], [7.4, -9.2]].forEach(([x, z]) => put('fern', x, z, 1));
+    /* enrochements */
+    [[-33, 11, 1.6], [39, 17, 2.0], [-49, -8, 2.4]].forEach(([x, z, s]) => put('boulder', x, z, s));
+    /* pots sur les terrasses — posés sur les platelages, pas dans le sol */
+    [[-20.4, 4.4], [4.6, 4.7], [12.2, 1.8]].forEach(([x, z]) => put('potted', x, z, 1, 0.18));
+    [[-6.2, 4.5], [16.6, 1.8]].forEach(([x, z]) => put('planter', x, z, 1, 0.18));
+
+    real('pine_tree_01', spots.pin, 1);
+    real('fir_tree_01', spots.fir, 1);
+    real('island_tree_02', spots.tree, 1);
+    real('tree_small_02', spots.small, 1);
+    real('shrub_02', spots.shrub2, 1);
+    real('shrub_04', spots.shrub4, 1);
+    real('fern_02', spots.fern, 1);
+    real('boulder_01', spots.boulder, 1);
+    real('potted_plant_02', spots.potted, 1);
+    real('planter_box_01', spots.planter, 1);
+
+    /* ═══ LA PARCELLE — clôture claire-voie + pelouse délimitée ═══ */
+    const fence = new THREE.Group();
+    const post = new THREE.BoxGeometry(0.09, 1.05, 0.09);
+    const rail = (a, b) => {
+      const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
+      const m = new THREE.Mesh(new THREE.BoxGeometry(len, 0.07, 0.03), mats.bois);
+      m.position.set((a[0] + b[0]) / 2, 0, (a[1] + b[1]) / 2);
+      m.rotation.y = -Math.atan2(b[1] - a[1], b[0] - a[0]);
+      return m;
+    };
+    /* parcelle fermée sur 4 côtés, portail à l'arrivée du chemin (est, z≈-8) */
+    const runs = [
+      [[-33, 24], [-33, -26]],
+      [[-33, -26], [38, -26]],
+      [[38, -26], [38, -10.5]],
+      [[38, -5.5], [38, 24]],
+      [[38, 24], [-33, 24]]
     ];
-    canopyMats[2].color = new THREE.Color(0x5d6c40);
-    canopyMats[3].color = new THREE.Color(0x44532f);
-
-    /* pin sylvestre — fût nu, houppier en plateaux irréguliers */
-    const pin = (x, z, s = 1, seed = 0) => {
-      const g = new THREE.Group();
-      const y0 = groundY(x, z);
-      const lean = (fbm(x * 0.3, z * 0.3, 2) - 0.5) * 0.16;
-      const t = new THREE.Mesh(new THREE.CylinderGeometry(0.08 * s, 0.16 * s, 3.6 * s, 7), mats.trunk);
-      t.position.y = 1.8 * s;
-      t.rotation.z = lean;
-      t.castShadow = true;
-      g.add(t);
-      const nPl = 2 + Math.floor(fbm(seed, x, 2) * 2.9);
-      for (let i = 0; i < nPl; i++) {
-        const r = (1.9 - i * 0.42) * s * (0.85 + fbm(i, seed + 3, 2) * 0.4);
-        const geo = ruffle(new THREE.IcosahedronGeometry(r, 2), 0.34, 1.3, seed + i * 7);
-        const c = new THREE.Mesh(geo, canopyMats[(seed + i) % 4 | 0]);
-        c.scale.y = 0.32 + fbm(i * 3, seed, 2) * 0.1;
-        c.position.set(
-          (fbm(seed + i, 1, 2) - 0.5) * 1.1 * s + lean * 3,
-          (3.3 + i * 0.75) * s,
-          (fbm(seed + i, 9, 2) - 0.5) * 1.1 * s
-        );
-        c.castShadow = true;
-        g.add(c);
+    runs.forEach(([[ax, az], [bx, bz]]) => {
+      const segs = Math.max(1, Math.round(Math.hypot(bx - ax, bz - az) / 2.4));
+      for (let i = 0; i <= segs; i++) {
+        const x = ax + ((bx - ax) * i) / segs, z = az + ((bz - az) * i) / segs;
+        const p = new THREE.Mesh(post, mats.inkMetal);
+        p.position.set(x, groundY(x, z) + 0.52, z);
+        fence.add(p);
       }
-      g.position.set(x, y0 - 0.1, z);
-      g.rotation.y = x * 1.7 + z;
-      this.group.add(g);
-    };
-
-    /* chêne — couronne large en masses composées */
-    const chene = (x, z, s = 1, seed = 1) => {
-      const g = new THREE.Group();
-      const y0 = groundY(x, z);
-      const t = new THREE.Mesh(new THREE.CylinderGeometry(0.13 * s, 0.2 * s, 1.6 * s, 7), mats.trunk);
-      t.position.y = 0.8 * s;
-      t.castShadow = true;
-      g.add(t);
-      const nB = 3 + (seed % 2);
-      for (let i = 0; i < nB; i++) {
-        const r = (1.35 - i * 0.14) * s * (0.85 + fbm(i, seed, 2) * 0.45);
-        const geo = ruffle(new THREE.IcosahedronGeometry(r, 2), 0.3, 1.1, seed * 3 + i * 5);
-        const c = new THREE.Mesh(geo, canopyMats[(seed + i * 2) % 4 | 0]);
-        c.scale.y = 0.72 + fbm(i, seed + 8, 2) * 0.2;
-        c.position.set(
-          (fbm(seed, i * 2, 2) - 0.5) * 1.5 * s,
-          (2.1 + fbm(i * 5, seed, 2) * 1.1) * s,
-          (fbm(seed, i * 7 + 2, 2) - 0.5) * 1.5 * s
-        );
-        c.castShadow = true;
-        g.add(c);
+      for (let h = 0; h < 3; h++) {
+        const r = rail([ax, az], [bx, bz]);
+        const midX = (ax + bx) / 2, midZ = (az + bz) / 2;
+        r.position.y = groundY(midX, midZ) + 0.35 + h * 0.28;
+        fence.add(r);
       }
-      g.position.set(x, y0 - 0.1, z);
-      g.rotation.y = z * 2.3;
-      this.group.add(g);
-    };
-
-    /* cyprès de haie — fuseau légèrement irrégulier */
-    const cypres = (x, z, s = 1, seed = 2) => {
-      const y0 = groundY(x, z);
-      const geo = ruffle(new THREE.ConeGeometry(0.5 * s, 4.6 * s, 8, 3), 0.16, 2.2, seed);
-      const c = new THREE.Mesh(geo, canopyMats[3]);
-      c.position.set(x, y0 + 2.2 * s, z);
-      c.castShadow = true;
-      this.group.add(c);
-    };
-
-    /* graminées — touffes fines près des terrasses */
-    const graminee = (x, z, s = 1) => {
-      const y0 = groundY(x, z);
-      const g = new THREE.Group();
-      for (let i = 0; i < 7; i++) {
-        const b = new THREE.Mesh(new THREE.ConeGeometry(0.025 * s, 0.75 * s * (0.7 + Math.random() * 0.6), 4), canopyMats[2]);
-        b.position.set((Math.random() - 0.5) * 0.5 * s, 0.32 * s, (Math.random() - 0.5) * 0.5 * s);
-        b.rotation.z = (Math.random() - 0.5) * 0.5;
-        g.add(b);
-      }
-      g.position.set(x, y0, z);
-      this.group.add(g);
-    };
-
-    /* — composition — */
-    /* bosquet de pins au nord, derrière la maison et la ferme */
-    pin(-18, -22, 1.5, 1); pin(-11, -18, 1.2, 2); pin(-46, -28, 1.8, 3);
-    pin(-52, -20, 1.3, 4); pin(-42, -32, 1.5, 5); pin(-24, -26, 1.1, 6);
-    pin(24, -20, 1.4, 7);
-    /* pins d'accompagnement à l'est, au-delà de la cour */
-    pin(44, -14, 1.6, 8); pin(50, -5, 1.2, 9);
-    /* chênes sur le coteau sud */
-    chene(-16, 16, 1.3, 1); chene(32, 15, 1.6, 2); chene(-29, 12, 1.1, 3);
-    chene(10, 22, 1.4, 4); chene(48, 11, 1.0, 5); chene(-38, 18, 1.2, 6);
-    /* haie de cyprès le long de la cour */
-    cypres(29.5, -13.5, 1.1, 1); cypres(29.5, -11, 1.0, 2); cypres(29.5, -8.5, 1.15, 3);
-    /* arbre d'ombrage dans la cour */
-    chene(21, -12.6, 1.05, 7);
-    /* graminées près du jacuzzi, de la piscine et du muret */
-    graminee(-19.5, 8.8, 1.2); graminee(-16.2, 9.0, 1); graminee(-20.6, 5.9, 1.1);
-    graminee(20.4, 7.0, 1.2); graminee(7.6, 7.6, 1); graminee(-21.5, 4.2, 0.9);
-    graminee(26.6, -3.4, 1.1); graminee(6.9, -6.9, 0.9);
-
-    /* boisement lointain — masses simples sur les pentes */
-    for (let i = 0; i < 26; i++) {
-      const a = (i / 26) * Math.PI * 2;
-      const r = 64 + (i % 5) * 15;
-      const x = Math.cos(a) * r * 1.4;
-      const z = -30 + Math.sin(a) * r;
-      if (Math.abs(x) < 48 && z > -34 && z < 30) continue;
-      const s = 1.6 + (i % 3) * 0.9;
-      const geo = ruffle(new THREE.IcosahedronGeometry(2.4 * s, 1), 0.3, 0.6, i);
-      const c = new THREE.Mesh(geo, canopyMats[i % 4]);
-      c.scale.y = 0.6;
-      c.position.set(x, groundY(x, z) + 1.1 * s, z);
-      this.group.add(c);
-    }
-
-    /* affleurements rocheux sur le coteau */
-    [[-34, 10, 1.4], [38, 18, 1.8], [-48, -8, 2.2]].forEach(([rx, rz, rs]) => {
-      const rock = new THREE.Mesh(ruffle(new THREE.IcosahedronGeometry(rs, 1), 0.4, 0.9, rx), mats.roche);
-      rock.scale.y = 0.5;
-      rock.position.set(rx, groundY(rx, rz) + rs * 0.16, rz);
-      rock.castShadow = true;
-      this.group.add(rock);
     });
+    /* portail : deux vantaux claire-voie entrouverts */
+    const gy = groundY(38, -8);
+    [[-10.4, 0.5], [-5.6, -0.5]].forEach(([z, dir]) => {
+      const vantail = new THREE.Group();
+      const cadre = new THREE.Mesh(new THREE.BoxGeometry(0.08, 1.1, 2.1), mats.inkMetal);
+      cadre.position.set(0, 0.55, dir * 1.05);
+      vantail.add(cadre);
+      for (let h = 0; h < 3; h++) {
+        const lisse = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.09, 2.0), mats.bois);
+        lisse.position.set(0.02, 0.28 + h * 0.3, dir * 1.05);
+        vantail.add(lisse);
+      }
+      vantail.position.set(38, gy, z);
+      vantail.rotation.y = dir * 0.5;
+      fence.add(vantail);
+    });
+    this.group.add(fence);
 
-    /* chemin d'accès gravier — serpente depuis l'est jusqu'à la cour */
+    /* pelouse entretenue à l'intérieur de la parcelle (plus verte) */
+    const lawnMat = mats.prairie.clone();
+    lawnMat.color = new THREE.Color(0xa8b878);
+    lawnMat.map = mats.prairie.map.clone();
+    lawnMat.map.repeat.set(34, 22);
+    const lawnGeo = new THREE.PlaneGeometry(68, 46, 52, 36);
+    lawnGeo.rotateX(-Math.PI / 2);
+    const lp = lawnGeo.attributes.position;
+    for (let i = 0; i < lp.count; i++) {
+      const x = lp.getX(i) + 2.5, z = lp.getZ(i) - 1;
+      lp.setX(i, x); lp.setZ(i, z);
+      lp.setY(i, groundY(x, z) + 0.035);
+    }
+    lawnGeo.computeVertexNormals();
+    const lawn = new THREE.Mesh(lawnGeo, lawnMat);
+    lawn.receiveShadow = true;
+    this.group.add(lawn);
+
+    /* chemin d'accès gravier — jusqu'au portail de la cour */
     const pathGeo = new THREE.PlaneGeometry(30, 4.0, 30, 3);
     pathGeo.rotateX(-Math.PI / 2);
     const pp = pathGeo.attributes.position;
     for (let i = 0; i < pp.count; i++) {
       const lx = pp.getX(i), lz = pp.getZ(i);
-      const wx = lx + 44;
+      const wx = lx + 52;
       const wz = lz - 8 + Math.sin(lx * 0.14) * 2.0;
       pp.setX(i, wx);
       pp.setZ(i, wz);

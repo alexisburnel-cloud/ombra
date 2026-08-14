@@ -6,3 +6,14 @@ dist/
 .env*
 
 assets-raw/
+
+public/models/
+
+# pipeline 3D Blender (lourds, regeneres par scripts)
+3d/assets/*
+!3d/assets/.gitkeep
+3d/renders/*
+!3d/renders/.gitkeep
+3d/blender/*.blend1
+3d/blender/*.blend
+3d/blender/*.blend1

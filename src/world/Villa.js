@@ -112,20 +112,20 @@ export class Villa {
     }
     this.group.add(gCharp);
 
-    /* ═══════════ ATTIQUE — suite parentale bardée (x -6..6) ═══════════ */
+    /* ═══════════ ATTIQUE — suite parentale bardée, posée SUR l'acrotère ═══════════ */
     const gEtage = new THREE.Group();
-    const etage = mesh(box(12.2, 2.75, 8.2), mats.siding, 0, 5.13, -1.5);
+    const etage = mesh(box(12.2, 2.75, 8.2), mats.siding, 0, 5.29, -1.5);
     gEtage.add(etage); addEdges(etage);
     /* fond sombre + ruban vitré filant sud */
-    gEtage.add(mesh(box(10.9, 1.26, 0.016), mats.inkMetal, 0, 5.25, 2.615, { cast: false }));
+    gEtage.add(mesh(box(10.9, 1.26, 0.016), mats.inkMetal, 0, 5.41, 2.615, { cast: false }));
     const ruban = new THREE.Mesh(box(10.8, 1.2, 0.05), mats.glass);
-    ruban.position.set(0, 5.25, 2.66);
+    ruban.position.set(0, 5.41, 2.66);
     gEtage.add(ruban);
-    [-4.2, -1.4, 1.4, 4.2].forEach((x) => gEtage.add(mesh(box(0.08, 1.2, 0.1), mats.alu, x, 5.25, 2.66, { cast: false })));
+    [-4.2, -1.4, 1.4, 4.2].forEach((x) => gEtage.add(mesh(box(0.08, 1.2, 0.1), mats.alu, x, 5.41, 2.66, { cast: false })));
     /* terrasse d'étage ouest, sur le toit du corps (garde-corps verre) */
-    gEtage.add(mesh(box(2.2, 0.06, 6.6), mats.planks, -7.2, 3.82, -1.5, { cast: false }));
-    gEtage.add(mesh(box(2.2, 0.9, 0.04), mats.glass, -7.2, 4.3, 1.75, { cast: false }));
-    gEtage.add(mesh(box(0.04, 0.9, 6.6), mats.glass, -8.28, 4.3, -1.5, { cast: false }));
+    gEtage.add(mesh(box(2.2, 0.06, 6.6), mats.planks, -7.2, 3.95, -1.5, { cast: false }));
+    gEtage.add(mesh(box(2.2, 0.9, 0.04), mats.glass, -7.2, 4.45, 1.75, { cast: false }));
+    gEtage.add(mesh(box(0.04, 0.9, 6.6), mats.glass, -8.28, 4.45, -1.5, { cast: false }));
     this.group.add(gEtage);
 
     /* ═══════════ COUVERTURES ═══════════ */
@@ -142,9 +142,9 @@ export class Villa {
     const acro = mesh(box(14.6, 0.42, 10.6), mats.enduit, -1.0, 3.7, -1.35);
     gCouv.add(acro); addEdges(acro);
     /* toiture attique — dalle débordante + casquette */
-    const toitEtage = mesh(box(13.2, 0.3, 9.2), mats.beton, 0, 6.66, -1.5);
+    const toitEtage = mesh(box(13.2, 0.3, 9.2), mats.beton, 0, 6.82, -1.5);
     gCouv.add(toitEtage); addEdges(toitEtage);
-    gCouv.add(mesh(box(13.2, 0.14, 1.5), mats.beton, 0, 6.6, 3.4, { cast: true }));
+    gCouv.add(mesh(box(13.2, 0.14, 1.5), mats.beton, 0, 6.76, 3.4, { cast: true }));
     /* toit de l'aile garage */
     const toitGar = mesh(box(11.6, 0.4, 9.8), mats.enduit, 11.5, 3.62, -3.65);
     gCouv.add(toitGar); addEdges(toitGar);
@@ -220,13 +220,20 @@ export class Villa {
     /* ═══════════ FINITIONS — terrasses, pergola, piscine, jacuzzi, cour ═══════════ */
     const gFini = new THREE.Group();
 
-    /* soutènement sud (front de vallée) + escalier */
+    /* soutènement sud (front de vallée) */
     const soutien = mesh(box(37, 3.0, 0.6), mats.soutenement, 11.5, -1.28, 8.2);
     gFini.add(soutien); addEdges(soutien);
     gFini.add(mesh(box(0.6, 3.0, 13.5), mats.soutenement, 29.7, -1.28, 14.9));
+    /* grand emmarchement paysager : volée large, joues en pierre, palier */
     for (let i = 0; i < 6; i++) {
-      gFini.add(mesh(box(2.6, 0.45, 0.64), mats.paving, -3.4, -0.22 - i * 0.44, 8.3 + i * 0.62));
+      gFini.add(mesh(box(3.4, 0.45, 0.68), mats.paving, -3.4, -0.22 - i * 0.44, 8.32 + i * 0.66));
     }
+    gFini.add(mesh(box(3.6, 0.14, 1.6), mats.paving, -3.4, -2.55, 12.6, { cast: false }));
+    [-5.35, -1.45].forEach((jx) => {
+      const joue = mesh(box(0.5, 2.9, 4.9), mats.soutenement, jx, -1.35, 10.4);
+      gFini.add(joue);
+    });
+    gFini.add(mesh(box(0.09, 0.62, 0.09), mats.borne, -5.0, -2.3, 12.2, { cast: false }));
     /* muret paysager ouest */
     const muret = mesh(box(10, 1.05, 0.5), mats.soutenement, -22, 0.52, 5.4);
     gFini.add(muret); addEdges(muret);
@@ -275,8 +282,8 @@ export class Villa {
     /* banc + graminées autour du jacuzzi */
     gFini.add(mesh(box(2.2, 0.38, 0.45), mats.noyer, -17.9, 0.36, 8.9, { cast: false }));
 
-    /* piscine 12×4.5 à marches + plage */
-    gFini.add(mesh(box(15.6, 0.14, 7.6), mats.paving, 14.2, 0.1, 4.3, { cast: false }));
+    /* piscine 12×4.5 à marches + plage (contenue dans la plateforme) */
+    gFini.add(mesh(box(14.8, 0.14, 6.2), mats.paving, 14.2, 0.1, 4.6, { cast: false }));
     this.pool = new Water({ width: 12, depth: 4.5, calm: 0, scale: 0.85 });
     this.pool.mesh.position.set(14.0, 0.22, 4.4);
     gFini.add(this.pool.mesh);
@@ -295,15 +302,15 @@ export class Villa {
     /* margelle sombre */
     gFini.add(mesh(box(12.4, 0.06, 0.18), mats.inkMetal, 14, 0.19, 2.08, { cast: false }));
     gFini.add(mesh(box(12.4, 0.06, 0.18), mats.inkMetal, 14, 0.19, 6.72, { cast: false }));
-    /* transats + parasol + douche */
-    [[10.6, 8.0], [12.4, 8.0], [14.2, 8.0]].forEach(([tx, tz]) => {
+    /* transats + parasol + douche — sur la plage, jamais dans le vide */
+    [[10.6, 7.15], [12.4, 7.15], [14.2, 7.15]].forEach(([tx, tz]) => {
       const t = mesh(box(0.7, 0.12, 1.9), mats.fabric, tx, 0.32, tz);
       t.rotation.x = -0.06;
       gFini.add(t);
       gFini.add(mesh(box(0.7, 0.3, 0.12), mats.fabric, tx, 0.42, tz - 0.86, { cast: false }));
     });
-    gFini.add(mesh(new THREE.CylinderGeometry(0.03, 0.03, 2.3, 6), mats.aluClair, 19.2, 1.25, 7.2, { cast: false }));
-    gFini.add(mesh(box(0.32, 0.05, 0.32), mats.aluClair, 19.2, 2.42, 7.2, { cast: false }));
+    gFini.add(mesh(new THREE.CylinderGeometry(0.03, 0.03, 2.3, 6), mats.aluClair, 19.4, 1.25, 6.9, { cast: false }));
+    gFini.add(mesh(box(0.32, 0.05, 0.32), mats.aluClair, 19.4, 2.42, 6.9, { cast: false }));
 
     /* cuisine d'été contre l'aile est */
     gFini.add(mesh(box(3.0, 0.95, 0.75), mats.beton, 8.6, 0.88, 1.7));
@@ -352,8 +359,8 @@ export class Villa {
     gInt.add(mesh(box(0.18, 1.7, 1.1), mats.inkMetal, -8.65, 1.6, -2.9, { cast: false }));
     this.ember = mesh(box(0.05, 0.4, 0.9), mats.ember, -8.72, 1.1, -2.9, { cast: false });
     gInt.add(this.ember);
-    /* bibliothèque nord double hauteur */
-    gInt.add(mesh(box(4.6, 4.6, 0.4), mats.noyer, -13.6, 2.7, -5.7));
+    /* bibliothèque nord double hauteur — posée devant le mur */
+    gInt.add(mesh(box(4.6, 4.6, 0.4), mats.noyer, -13.6, 2.7, -5.42));
     /* lampadaire + plante */
     gInt.add(mesh(new THREE.CylinderGeometry(0.016, 0.016, 1.7, 6), mats.inkMetal, -11.2, 1.25, -4.6));
     this.lampHead = mesh(new THREE.SphereGeometry(0.09, 16, 12), mats.pendant, -11.2, 2.16, -4.6, { cast: false });
@@ -432,35 +439,21 @@ export class Villa {
     this.baseScale = {};
     for (const [k, g] of Object.entries(this.parts)) this.baseScale[k] = g.scale.clone();
 
-    /* ═══ AILE ANCIENNE À RÉNOVER (ouest) ═══ */
-    this.renov = new THREE.Group();
-    this.renov.position.set(-40, 0, -18);
-    const old1 = mesh(box(9, 3.4, 6.2), mats.vieillePierre, 0, 1.7, 0);
-    const oldPigW = new THREE.Mesh(gablePrism(0.55, 3.1, 1.9), mats.vieillePierre);
-    oldPigW.position.set(-4.5, 3.4, 0); oldPigW.castShadow = true;
-    const oldPigE = new THREE.Mesh(gablePrism(0.55, 3.1, 1.9), mats.vieillePierre);
-    oldPigE.position.set(3.95, 3.4, 0); oldPigE.castShadow = true;
-    this.renov.add(old1, oldPigW, oldPigE);
-    addEdges(old1);
-    this.renovRoof = new THREE.Group();
-    const rL = mesh(box(9.8, 0.1, 3.75), mats.tuiles, 0, 4.42, -1.62); rL.rotation.x = -0.55;
-    const rR = mesh(box(9.8, 0.1, 3.75), mats.tuiles, 0, 4.42, 1.62); rR.rotation.x = 0.55;
-    this.renovRoof.add(rL, rR);
-    this.renovRoof.add(mesh(box(9.8, 0.12, 0.26), mats.inkMetal, 0, 5.32, 0, { cast: false }));
-    this.renov.add(this.renovRoof);
+    /* ═══ EXTENSION VITRÉE — le récit « transformer » sur l'aile est ═══ */
     this.renovExt = new THREE.Group();
-    const extDalle = mesh(box(6.2, 0.3, 5.4), mats.beton, 7.2, 0.15, 0.2);
-    const extToit = mesh(box(6.6, 0.28, 5.8), mats.beton, 7.2, 3.3, 0.2);
-    const extGlass = new THREE.Mesh(box(5.6, 2.7, 0.05), mats.glass);
-    extGlass.position.set(7.2, 1.7, 2.6);
-    const extFond = mesh(box(6.2, 3.0, 0.4), mats.siding, 7.2, 1.8, -2.3);
-    [4.6, 7.2, 9.8].forEach((x) => this.renovExt.add(mesh(box(0.14, 3.0, 0.14), mats.alu, x, 1.8, 2.6, { cast: false })));
-    this.renovExt.add(extDalle, extToit, extGlass, extFond);
+    const extDalle = mesh(box(5.6, 0.3, 6.8), mats.beton, 19.9, 0.15, -3.6);
+    const extToit = mesh(box(6.0, 0.28, 7.2), mats.beton, 19.9, 3.28, -3.6);
+    const extGlass = new THREE.Mesh(box(0.05, 2.7, 6.2), mats.glass);
+    extGlass.position.set(22.6, 1.7, -3.6);
+    const extGlassS = new THREE.Mesh(box(5.2, 2.7, 0.05), mats.glass);
+    extGlassS.position.set(19.9, 1.7, -0.35);
+    [[22.6, -6.3], [22.6, -0.9], [22.6, -3.6]].forEach(([px, pz]) => {
+      this.renovExt.add(mesh(box(0.14, 3.0, 0.14), mats.alu, px, 1.7, pz, { cast: false }));
+    });
+    this.renovExt.add(extDalle, extToit, extGlass, extGlassS);
     addEdges(extToit);
-    this.renov.add(this.renovExt);
+    this.group.add(this.renovExt);
     this.renovExtBase = this.renovExt.position.clone();
-    this.renovRoofBase = this.renovRoof.position.clone();
-    this.group.add(this.renov);
 
     /* ═══ ARÊTES — le trait de lumière ═══ */
     this.group.updateMatrixWorld(true);
@@ -602,14 +595,12 @@ export class Villa {
     this.lames.forEach((l, i) => { l.rotation.z = rot * (1 + Math.sin(i * 1.7) * 0.04); });
   }
 
+  /* l'extension vitrée vient s'assembler contre l'aile est */
   setRenov(r) {
-    this.renovRoof.visible = r > 0.02;
     this.renovExt.visible = r > 0.02;
-    const roofDrop = 1 - smooth(0.15, 0.6, r);
-    this.renovRoof.position.y = this.renovRoofBase.y + roofDrop * 5.5;
-    const extSlide = 1 - smooth(0.4, 0.9, r);
-    this.renovExt.position.x = this.renovExtBase.x + extSlide * 10;
-    this.renovExt.position.y = this.renovExtBase.y + extSlide * 0.6;
+    const extSlide = 1 - smooth(0.2, 0.85, r);
+    this.renovExt.position.x = this.renovExtBase.x + extSlide * 9;
+    this.renovExt.position.y = this.renovExtBase.y + extSlide * 0.5;
   }
 
   /* n : soir · fill : caméra à l'intérieur · pr : présence du bâti (0 avant chantier) */

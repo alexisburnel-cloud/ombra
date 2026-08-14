@@ -86,6 +86,66 @@ function buildToupie(mats) {
   return { group: g, drum };
 }
 
+/* poussière de chantier — sprites doux à durée de vie courte */
+function dustTexture() {
+  const cv = document.createElement('canvas');
+  cv.width = cv.height = 64;
+  const ctx = cv.getContext('2d');
+  const grad = ctx.createRadialGradient(32, 32, 2, 32, 32, 30);
+  grad.addColorStop(0, 'rgba(212,202,182,0.5)');
+  grad.addColorStop(0.55, 'rgba(206,196,176,0.2)');
+  grad.addColorStop(1, 'rgba(200,190,170,0)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 64, 64);
+  return new THREE.CanvasTexture(cv);
+}
+
+class Dust {
+  constructor(parent, count) {
+    const tex = dustTexture();
+    this.pool = [];
+    for (let i = 0; i < count; i++) {
+      const s = new THREE.Sprite(new THREE.SpriteMaterial({
+        map: tex, transparent: true, opacity: 0, depthWrite: false
+      }));
+      s.visible = false;
+      s.userData = { life: 0, vel: new THREE.Vector3(), grow: 1 };
+      parent.add(s);
+      this.pool.push(s);
+    }
+    this._i = 0;
+  }
+
+  emit(p, spread, up) {
+    const s = this.pool[this._i = (this._i + 1) % this.pool.length];
+    s.position.set(
+      p.x + (Math.random() - 0.5) * spread,
+      p.y + Math.random() * 0.2,
+      p.z + (Math.random() - 0.5) * spread
+    );
+    s.userData.life = 1;
+    s.userData.vel.set((Math.random() - 0.5) * 0.5, up * (0.5 + Math.random() * 0.4), (Math.random() - 0.5) * 0.5);
+    s.userData.grow = 0.9 + Math.random() * 0.8;
+    const sz = 0.5 + Math.random() * 0.4;
+    s.scale.setScalar(sz);
+    s.visible = true;
+  }
+
+  update(dt) {
+    this.pool.forEach((s) => {
+      if (s.userData.life <= 0) return;
+      s.userData.life -= dt * 0.55;
+      if (s.userData.life <= 0) { s.visible = false; s.material.opacity = 0; return; }
+      s.position.addScaledVector(s.userData.vel, dt);
+      s.userData.vel.x *= 1 - dt * 0.4;
+      s.userData.vel.z *= 1 - dt * 0.4;
+      const age = 1 - s.userData.life;
+      s.scale.setScalar(s.scale.x + dt * s.userData.grow);
+      s.material.opacity = Math.min(age * 4, 1) * s.userData.life * 0.65;
+    });
+  }
+}
+
 /* grue mobile — porteur + flèche télescopique + élingue */
 function buildGrue(mats) {
   const g = new THREE.Group();
@@ -163,10 +223,18 @@ export class Chantier {
     this.grue.group.position.set(-2, 0.1, -12.5);
     this.grue.group.rotation.y = 0.35;
     this.group.add(this.grue.group);
+
+    /* poussière */
+    this.dust = new Dust(this.group, 48);
+    this._emitT = 0;
+    this._lastT = 0;
+    this._v = new THREE.Vector3();
   }
 
   /* c : progression chantier 0..1 · t : temps */
   update(c, t) {
+    const dt = clamp(t - this._lastT, 0, 0.05);
+    this._lastT = t;
     const vis = c > 0.015 && c < 0.97;
     this.group.visible = vis;
     if (!vis) return;
@@ -213,5 +281,36 @@ export class Chantier {
     this.grue.fleche.rotation.z = 0.62 + Math.sin(t * 0.4) * 0.02;
     this.grue.fleche.rotation.y = Math.sin(t * 0.25) * 0.12 * lift;
     this.grue.charge.visible = lift < 0.85;
+
+    /* — POUSSIÈRE — */
+    this._emitT += dt;
+    const pump = this._emitT > 0.07;
+    if (pump) this._emitT = 0;
+    if (pump) {
+      /* au godet, quand la pelle mord le sol */
+      if (dig > 0.3 && Math.sin(t * 1.4 * 1.3 + 1) < -0.2) {
+        this.pelle.bucket.getWorldPosition(this._v);
+        this._v.y = Math.max(this._v.y - 0.3, 0.15);
+        this.group.worldToLocal(this._v);
+        this.dust.emit(this._v, 0.9, 1);
+      }
+      /* aux chenilles pendant les entrées/sorties d'engins */
+      if ((pIn > 0.05 && pIn < 0.95) || (pOut > 0.05 && pOut < 0.95)) {
+        this._v.set(this.pelle.group.position.x - 1.8, 0.25, this.pelle.group.position.z);
+        this.dust.emit(this._v, 1.4, 0.5);
+      }
+      if ((tIn > 0.05 && tIn < 0.95) || (tOut > 0.05 && tOut < 0.95)) {
+        this._v.set(this.toupie.group.position.x - 2.4, 0.25, this.toupie.group.position.z);
+        this.dust.emit(this._v, 1.4, 0.5);
+      }
+      /* à la goulotte pendant la coulée du béton */
+      if (tIn > 0.95 && tOut < 0.05) {
+        this._v.set(3.2, 1.2, 0);
+        this.toupie.group.localToWorld(this._v);
+        this.group.worldToLocal(this._v);
+        this.dust.emit(this._v, 0.4, 0.7);
+      }
+    }
+    this.dust.update(dt);
   }
 }
