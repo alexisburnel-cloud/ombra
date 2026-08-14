@@ -3,64 +3,71 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>OMBRA — Atelier d'architecture</title>
-  <meta name="description" content="OMBRA, atelier d'architecture — Lugano · Kyoto. Villas contemporaines, résidences de prestige, architecture intérieure. Une expérience : la Villa Vespera, de l'aube à la nuit." />
-  <meta name="theme-color" content="#0d0b08" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230d0b08'/%3E%3Crect x='14' y='24' width='36' height='3' fill='%23eae3d4'/%3E%3Crect x='20' y='34' width='24' height='14' fill='none' stroke='%23c79a5f' stroke-width='2'/%3E%3Ccircle cx='47' cy='17' r='4' fill='%23c79a5f'/%3E%3C/svg%3E" />
+  <title>CARÈNE — Créateur de lieux de vie | Construction & Rénovation, Drôme · Ardèche</title>
+  <meta name="description" content="Depuis 1979, Carène conçoit et construit des lieux de vie durables, performants et porteurs de sens. Construction et rénovation en Drôme, Ardèche et quart sud-est : maisons, villas, extensions, projets atypiques, locaux professionnels." />
+  <meta name="theme-color" content="#152b25" />
+  <meta property="og:title" content="CARÈNE — Créateur de lieux de vie" />
+  <meta property="og:description" content="Construction & rénovation depuis 1979 — Drôme, Ardèche et quart sud-est. Maisons, villas, extensions, rénovations intégrales." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/photos/maison-2020.jpg" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23152b25'/%3E%3Cpath d='M10 46 L28 16 L38 30 Q46 38 50 46 L40 46 Q36 34 30 30 L20 46 Z' fill='none' stroke='%2340c98f' stroke-width='3.4' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HomeAndConstructionBusiness",
+    "name": "Carène",
+    "slogan": "Créateur de lieux de vie",
+    "description": "Depuis 1979, Carène conçoit et construit des lieux de vie durables, performants et porteurs de sens. Construction et rénovation : maisons, villas, extensions, projets atypiques, locaux professionnels, logements collectifs.",
+    "telephone": "+33673216500",
+    "email": "contact@carene.net",
+    "url": "https://carene.net",
+    "foundingDate": "1979",
+    "areaServed": ["Drôme", "Ardèche", "Quart sud-est de la France"],
+    "sameAs": [
+      "https://www.facebook.com/MaisonsCarene",
+      "https://www.instagram.com/carene.createurdelieuxdevie",
+      "https://www.linkedin.com/company/carene-actu"
+    ]
+  }
+  </script>
 </head>
 <body>
-  <a class="skip" href="#oeuvres">Aller au contenu</a>
+  <a class="skip" href="#realisations">Aller aux réalisations</a>
 
   <canvas id="gl" aria-hidden="true"></canvas>
 
   <!-- ══════════ LOADER ══════════ -->
   <div class="loader" id="loader" role="status" aria-label="Chargement">
-    <div class="loader-mark">OMBRA</div>
-    <svg class="loader-plan" id="loaderPlan" viewBox="0 0 460 240" fill="none" aria-hidden="true">
-      <!-- podium -->
-      <path class="lp" d="M34 15 H454 V225 H34 Z" />
-      <!-- enveloppe de verre -->
-      <path class="lp" d="M118 57 H240 M262 57 H342 V183 H196 M174 183 H118 V57" />
-      <!-- portes (arcs) -->
-      <path class="lp lp-thin" d="M240 57 A22 22 0 0 1 262 79" />
-      <path class="lp lp-thin" d="M196 183 A22 22 0 0 1 174 161" />
-      <!-- noyau -->
-      <path class="lp lp-heavy" d="M285 71 H301 V141 H285 Z" />
-      <path class="lp lp-thin" d="M285 71 L301 141 M285 141 L301 71" />
-      <!-- refends -->
-      <path class="lp lp-thin" d="M230 57 V110 M230 130 V183" />
-      <!-- bassin -->
-      <path class="lp lp-amber" d="M314 127 H447 V197 H314 Z" />
-      <path class="lp lp-thin lp-amber" d="M322 189 L340 135 M348 192 L366 138 M374 195 L392 141" />
-      <!-- mur paysager -->
-      <path class="lp" d="M202 29 H398" />
-      <!-- emmarchement -->
-      <path class="lp lp-thin" d="M132 197 H216 M132 206 H216 M132 215 H216" />
-      <!-- mobilier -->
-      <path class="lp lp-thin" d="M138 96 H186 V132 H138 Z M150 108 H174" />
-      <!-- cotes -->
-      <path class="lp lp-thin" d="M118 44 V38 M342 44 V38 M118 41 H342" />
-      <path class="lp lp-thin" d="M105 57 H99 M105 183 H99 M102 57 V183" />
-      <!-- nord -->
-      <path class="lp lp-thin" d="M432 42 A12 12 0 1 1 431.9 42 M432 30 V42" />
-      <text class="lp-txt" x="222" y="36">22 000</text>
-      <text class="lp-txt" x="88" y="124" transform="rotate(-90 88 124)">9 000</text>
-      <text class="lp-txt" x="428" y="64">N</text>
+    <svg class="loader-mark" id="loaderMark" viewBox="0 0 120 84" fill="none" aria-hidden="true">
+      <path class="lm" d="M8 76 L44 14 Q47 9 50 14 L60 31" />
+      <path class="lm" d="M60 31 Q76 44 86 62 Q90 69 92 76 L74 76 Q68 52 56 38" />
+      <path class="lm" d="M56 38 L34 76 L8 76" />
+    </svg>
+    <svg class="loader-topo" id="loaderTopo" viewBox="0 0 560 200" fill="none" aria-hidden="true">
+      <path class="lt" d="M10 176 C90 168 150 150 220 152 C300 154 330 170 420 168 C480 166 520 158 550 150" />
+      <path class="lt" d="M30 150 C100 140 160 118 230 122 C310 126 350 148 430 144 C490 140 520 132 552 124" />
+      <path class="lt" d="M60 122 C120 110 180 86 250 92 C320 98 360 122 440 116 C495 112 525 104 554 96" />
+      <path class="lt" d="M96 94 C150 82 210 58 274 64 C338 70 372 94 448 88" />
+      <path class="lt" d="M140 66 C190 56 240 34 296 40 C352 46 382 66 452 60" />
+      <path class="lt lt-a" d="M196 40 C236 32 270 16 316 20 C362 24 390 40 456 34" />
     </svg>
     <div class="loader-foot">
       <span class="loader-pct" id="loadPct">000</span>
-      <span class="loader-tag">ÉTUDE 001 — LECTURE DES PLANS</span>
+      <span class="loader-tag">LECTURE DU TERRAIN — DRÔME · ARDÈCHE</span>
     </div>
   </div>
 
   <!-- ══════════ HEADER ══════════ -->
   <header class="hd">
     <a class="hd-mark" href="#top" id="markHome" data-cursor="HAUT">
-      <span class="hd-mark-name">OMBRA</span>
-      <span class="hd-mark-sub">atelier d'architecture</span>
+      <svg class="hd-logo" viewBox="0 0 120 84" fill="none" aria-hidden="true">
+        <path d="M8 76 L44 14 Q47 9 50 14 L60 31 Q76 44 86 62 Q90 69 92 76 L74 76 Q68 52 56 38 L34 76 Z" />
+      </svg>
+      <span class="hd-mark-name">CARÈNE</span>
+      <span class="hd-mark-sub">créateur de lieux de vie</span>
     </a>
     <button class="hd-menu" id="menuBtn" data-cursor="OUVRIR" aria-expanded="false" aria-controls="menu">
-      <span class="hd-menu-t" id="menuBtnLabel">Sommaire</span>
+      <span class="hd-menu-t" id="menuBtnLabel">Menu</span>
       <span class="hd-menu-i"><i></i><i></i></span>
     </button>
   </header>
@@ -69,20 +76,15 @@
   <div class="hud" aria-hidden="true">
     <div class="hud-ch">
       <span class="hud-num" id="hudNum">00</span>
-      <em class="hud-name" id="hudName">Prologue</em>
+      <em class="hud-name" id="hudName">Le terrain</em>
     </div>
-    <div class="hud-geo t-mono">46°00′17″N — 8°57′36″E<br>LAC DE LUGANO · CH</div>
+    <div class="hud-geo t-mono">DRÔME · ARDÈCHE<br>QUART SUD-EST</div>
     <div class="dayline" id="dayline">
       <span class="dayline-cap">AUBE</span>
       <i class="dayline-track"></i>
       <i class="dayline-dot" id="daylineDot"></i>
-      <span class="dayline-cap b">NUIT</span>
+      <span class="dayline-cap b">SOIR</span>
     </div>
-    <button class="hud-sound" id="soundBtn" data-cursor="SON">
-      <span>SON</span>
-      <em id="soundState">COUPÉ</em>
-      <i class="snd"><b></b><b></b><b></b></i>
-    </button>
   </div>
 
   <!-- ══════════ MENU ══════════ -->
@@ -90,24 +92,24 @@
     <div class="menu-bg" id="menuBg"></div>
     <div class="menu-in">
       <ol class="menu-list" id="menuList">
-        <li><a href="#hero" data-cursor="ALLER"><i>00</i><span>Prologue</span><em>l'aube attend</em></a></li>
-        <li><a href="#approche" data-cursor="ALLER"><i>I</i><span>L'approche</span><em>villa vespera</em></a></li>
-        <li><a href="#structure" data-cursor="ALLER"><i>II</i><span>La structure</span><em>coupe aa′</em></a></li>
-        <li><a href="#anatomie" data-cursor="ALLER"><i>III</i><span>L'anatomie</span><em>sept couches</em></a></li>
-        <li><a href="#interieur" data-cursor="ALLER"><i>IV</i><span>L'intérieur</span><em>le séjour</em></a></li>
-        <li><a href="#matiere" data-cursor="ALLER"><i>V</i><span>La matière</span><em>cinq échantillons</em></a></li>
-        <li><a href="#oeuvres" data-cursor="ALLER"><i>VI</i><span>Les œuvres</span><em>2019 — 2026</em></a></li>
-        <li><a href="#planches" data-cursor="ALLER"><i>VII</i><span>Planches</span><em>archives</em></a></li>
-        <li><a href="#nocturne" data-cursor="ALLER"><i>VIII</i><span>Nocturne</span><em>écrire</em></a></li>
+        <li><a href="#prologue" data-cursor="ALLER"><i>01</i><span>Carène</span><em>depuis 1979</em></a></li>
+        <li><a href="#construire" data-cursor="ALLER"><i>02</i><span>Construire</span><em>coordonner les lots</em></a></li>
+        <li><a href="#renover" data-cursor="ALLER"><i>03</i><span>Rénover</span><em>transformer l'existant</em></a></li>
+        <li><a href="#heritage" data-cursor="ALLER"><i>04</i><span>Depuis 1979</span><em>quatre décennies</em></a></li>
+        <li><a href="#matieres" data-cursor="ALLER"><i>05</i><span>Matières</span><em>pierre, bois, enduit</em></a></li>
+        <li><a href="#realisations" data-cursor="ALLER"><i>06</i><span>Réalisations</span><em>maisons livrées</em></a></li>
+        <li><a href="#rameur" data-cursor="ALLER"><i>07</i><span>Opportunité</span><em>maison du rameur</em></a></li>
+        <li><a href="#equipe" data-cursor="ALLER"><i>08</i><span>L'équipe</span><em>la transmission</em></a></li>
+        <li><a href="#contact" data-cursor="ALLER"><i>09</i><span>Contact</span><em>parlons de votre projet</em></a></li>
       </ol>
       <aside class="menu-side">
-        <p class="menu-side-p">Ombra dessine des maisons pour la lumière.
-        L'atelier travaille entre le lac de Lugano et Kyoto —
-        villas, résidences, intérieurs, silence.</p>
+        <p class="menu-side-p">Depuis 1979, Carène conçoit et construit
+        des lieux de vie durables, performants et porteurs de sens —
+        en Drôme, en Ardèche et dans le quart sud-est.</p>
         <div class="menu-side-meta t-mono">
-          <span>LUGANO — VIA CANOVA 9</span>
-          <span>KYOTO — SAKYŌ-KU</span>
-          <span>ATELIER@OMBRA.ARCHI</span>
+          <a href="tel:+33673216500">06 73 21 65 00</a>
+          <a href="mailto:contact@carene.net">CONTACT@CARENE.NET</a>
+          <span>MAISON · VILLA · EXTENSION · RÉNOVATION</span>
         </div>
       </aside>
     </div>
@@ -122,199 +124,341 @@
   <!-- ══════════ RÉCIT ══════════ -->
   <main id="top">
 
-    <!-- 00 · PROLOGUE -->
-    <section class="ch ch-hero" id="hero" data-ch="0" data-num="00" data-name="Prologue">
+    <!-- 01 · PROLOGUE — le territoire devient un plan -->
+    <section class="ch ch-dark ch-prologue" id="prologue" data-ch="0" data-num="01" data-name="Le terrain">
       <div class="frame">
-        <div class="hero-top">
-          <p class="hero-kicker t-lab" data-intro="kicker">Villas · Résidences · Intérieurs — Lugano · Kyoto</p>
+        <div class="pro-top">
+          <p class="pro-kicker t-lab" data-intro="kicker">Construction &amp; rénovation — Drôme · Ardèche</p>
         </div>
-        <h1 class="hero-title" id="heroTitle" aria-label="OMBRA">OMBRA</h1>
-        <div class="hero-rule" id="heroRule"></div>
-        <div class="hero-foot">
-          <p class="hero-line" data-intro="line">Nous dessinons l'ombre.<br>La lumière fait le reste.</p>
-          <div class="hero-hint" id="heroHint" data-intro="hint">
-            <span class="t-lab">Défiler pour entrer</span>
-            <i class="hero-hint-line"><b></b></i>
+        <h1 class="pro-title" id="proTitle" aria-label="CARÈNE">CARÈNE</h1>
+        <p class="pro-base" data-intro="base">Créateur de lieux de vie</p>
+        <div class="pro-rule" id="proRule"></div>
+        <div class="pro-foot">
+          <p class="pro-line" data-intro="line">Un projet naît d'un terrain,<br>d'une manière de vivre — et d'un plan.</p>
+          <div class="pro-hint" id="proHint" data-intro="hint">
+            <span class="t-lab">Défiler</span>
+            <i class="pro-hint-line"><b></b></i>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- I · L'APPROCHE -->
-    <section class="ch ch-approche" id="approche" data-ch="1" data-num="I" data-name="L'approche">
+    <!-- 02 · LE PROJET — approche de l'étude -->
+    <section class="ch ch-dark ch-etude" id="etude" data-ch="1" data-num="01" data-name="Le terrain">
       <div class="frame">
         <header class="ch-head">
-          <span class="t-lab" data-rv-fade>Chapitre I — Étude 001</span>
+          <span class="t-lab lab-light" data-rv-fade>Étude — maison de coteau</span>
         </header>
-        <div class="app-data t-mono" data-rv-fade>
-          <span>46°00′N 8°57′E</span>
-          <span>LAC DE LUGANO, CH</span>
-          <span>2025 — LIVRÉE</span>
-          <span>640 M² — R+1</span>
+        <div class="etu-data t-mono" data-rv-fade>
+          <span>DEPUIS 1979</span>
+          <span>SUR-MESURE</span>
+          <span>DRÔME · ARDÈCHE</span>
         </div>
-        <h2 class="app-title t-serif-xl" data-rv>Villa<br><span class="it">Vespera</span></h2>
-        <p class="app-body t-body" data-rv>Un long geste de pierre posé au-dessus du lac.
-        La maison n'interrompt pas le paysage — elle le cadre,
-        le retient un instant, puis le rend au soir.</p>
+        <h2 class="etu-title t-serif-xl" data-rv>Des lieux<br><span class="it">de vie.</span></h2>
+        <p class="etu-body t-body-light" data-rv data-rv-at="0.4">Depuis 1979, Carène conçoit et construit des lieux de vie
+        durables, performants et porteurs de sens — une vision de la
+        construction où l'esthétique rencontre la performance.</p>
       </div>
     </section>
 
-    <!-- II · LA STRUCTURE -->
-    <section class="ch ch-structure" id="structure" data-ch="2" data-num="II" data-name="La structure">
+    <!-- 03 · CONSTRUIRE -->
+    <section class="ch ch-dark ch-construire" id="construire" data-ch="2" data-num="02" data-name="Construire">
       <div class="frame">
         <header class="ch-head">
-          <span class="t-lab" data-rv-fade>Chapitre II — Élévation sud</span>
+          <span class="t-lab lab-light" data-rv-fade>Construire, c'est coordonner</span>
         </header>
-        <span class="str-side t-lab" data-rv-fade>Coupe AA′ — éch. 1:100</span>
-        <p class="str-body t-body" data-rv data-rv-at="0.35">Ce que la façade tait,<br>la coupe l'avoue.</p>
-      </div>
-    </section>
-
-    <!-- III · L'ANATOMIE -->
-    <section class="ch ch-anatomie" id="anatomie" data-ch="3" data-num="III" data-name="L'anatomie">
-      <div class="frame">
-        <header class="ch-head">
-          <span class="t-lab" data-rv-fade>Chapitre III — Axonométrie éclatée</span>
-        </header>
-        <ol class="ana-list" id="anaList">
-          <li data-k="roof"><i>05</i><span>Toiture</span><em>béton blanc · 35 cm</em></li>
-          <li data-k="upper"><i>04</i><span>Volume haut</span><em>porte-à-faux 6,00 m</em></li>
-          <li data-k="slab"><i>03</i><span>Dalle</span><em>coulée en place</em></li>
-          <li data-k="glass"><i>02</i><span>Enveloppe de verre</span><em>h. 3,20 m</em></li>
-          <li data-k="core"><i>01</i><span>Noyau de pierre</span><em>travertin massif</em></li>
+        <ol class="lots" id="lots">
+          <li data-k="fond"><i>01</i><span>Fondations</span><em>l'ancrage au terrain</em></li>
+          <li data-k="dalle"><i>02</i><span>Dalle basse</span><em>béton</em></li>
+          <li data-k="murs"><i>03</i><span>Murs porteurs</span><em>pierre &amp; maçonnerie</em></li>
+          <li data-k="charp"><i>04</i><span>Charpente</span><em>bois</em></li>
+          <li data-k="couv"><i>05</i><span>Couverture</span><em>tuiles</em></li>
+          <li data-k="menu"><i>06</i><span>Menuiseries</span><em>baies alu</em></li>
+          <li data-k="fini"><i>07</i><span>Finitions</span><em>terrasse &amp; enduits</em></li>
         </ol>
-        <p class="ana-note t-body" data-rv data-rv-at="0.3">Sept couches.<br>Aucun ornement.</p>
+        <p class="cons-note t-body-light" data-rv data-rv-at="0.35">Chaque projet est un assemblage précis.<br>
+        Notre métier : le tenir, du premier trait à la remise des clés.</p>
+        <p class="cons-cap t-mono" data-rv-fade>DE 10 À 14 MOIS, DE L'ÉTUDE À LA LIVRAISON</p>
       </div>
     </section>
 
-    <!-- IV · L'INTÉRIEUR -->
-    <section class="ch ch-interieur" id="interieur" data-ch="4" data-num="IV" data-name="L'intérieur">
+    <!-- 04 · RÉNOVER -->
+    <section class="ch ch-dark ch-renover" id="renover" data-ch="3" data-num="03" data-name="Rénover">
       <div class="frame">
         <header class="ch-head">
-          <span class="t-lab" data-rv-fade>Chapitre IV — Le séjour</span>
+          <span class="t-lab lab-light" data-rv-fade>Rénovation intégrale — transformer l'existant</span>
         </header>
-        <p class="int-cap t-mono" data-rv-fade>SÉJOUR — H. 3,20 M · TRAVERTIN, CHÊNE FUMÉ, BRONZE</p>
-        <div class="int-quote"><blockquote class="t-serif-l" data-rv data-rv-at="0.42">Le silence<br><span class="it">est un matériau.</span></blockquote></div>
+        <blockquote class="ren-quote"><p class="t-serif-l" data-rv data-rv-at="0.3">Ce qui est déjà là<br><span class="it">mérite mieux.</span></p></blockquote>
+        <p class="ren-body t-body-light" data-rv data-rv-at="0.5">Nous croyons au pouvoir transformateur des rénovations
+        intégrales : une approche méticuleuse et personnalisée, pour
+        faire d'espaces obsolètes ou mal conçus des lieux de vie
+        fonctionnels et esthétiques.</p>
       </div>
     </section>
 
-    <!-- V · LA MATIÈRE -->
-    <section class="ch ch-matiere" id="matiere" data-ch="5" data-num="V" data-name="La matière">
+    <!-- 05 · DEPUIS 1979 — l'héritage -->
+    <section class="ch ch-light ch-heritage" id="heritage" data-ch="4" data-num="04" data-name="Depuis 1979">
+      <div class="light-in">
+        <header class="lt-head">
+          <span class="t-lab" data-rv-fade>Savoir évoluer avec le temps</span>
+          <h2 class="t-serif-xl" data-rv>Quatre décennies,<br><span class="it">une exigence.</span></h2>
+          <p class="t-body maxw" data-rv data-rv-at="0.06">Chaque époque, chaque famille, chaque projet porte en lui une
+          histoire unique. Depuis plus de 45 ans, nous concevons des maisons,
+          des villas, des rénovations et des lieux de vie qui reflètent les
+          envies de nos clients — et les tendances de leur temps.</p>
+        </header>
+
+        <div class="era" data-era="1980">
+          <figure class="era-fig" data-cursor="ARCHIVE">
+            <img src="/photos/archive-1980.jpg" loading="lazy" alt="Villa aux toits de tuiles et arcades construite par Carène dans les années 1980, sous un ciel d'été" />
+            <figcaption class="t-mono"><span>DOSSIER A-080</span><span>TIRAGE ARGENTIQUE</span></figcaption>
+          </figure>
+          <div class="era-meta">
+            <span class="era-year t-serif-xl">80</span>
+            <p class="t-lab">Années 1980 — l'authenticité des premiers jours</p>
+          </div>
+        </div>
+
+        <div class="era flip" data-era="1990">
+          <figure class="era-fig" data-cursor="ARCHIVE">
+            <img src="/photos/archive-1990.jpg" loading="lazy" alt="Maison aux volets bleus sur un chemin de campagne, réalisation Carène des années 1990, photographie argentique" />
+            <figcaption class="t-mono"><span>DOSSIER A-090</span><span>TIRAGE ARGENTIQUE</span></figcaption>
+          </figure>
+          <div class="era-meta">
+            <span class="era-year t-serif-xl">90</span>
+            <p class="t-lab">Années 1990 — la maison familiale s'affirme</p>
+          </div>
+        </div>
+
+        <div class="era" data-era="2000">
+          <figure class="era-fig" data-cursor="ARCHIVE">
+            <img src="/photos/maison-2000.jpg" loading="lazy" alt="Maison aux lignes simplifiées et toit monopente sombre, réalisation Carène des années 2000" />
+            <figcaption class="t-mono"><span>DOSSIER A-100</span><span>NUMÉRIQUE</span></figcaption>
+          </figure>
+          <div class="era-meta">
+            <span class="era-year t-serif-xl">00</span>
+            <p class="t-lab">Années 2000 — des lignes plus contemporaines</p>
+          </div>
+        </div>
+
+        <div class="era flip" data-era="2010">
+          <figure class="era-fig" data-cursor="ARCHIVE">
+            <img src="/photos/maison-2010.jpg" loading="lazy" alt="Villa cubique blanche avec pergola bioclimatique et piscine, réalisation Carène des années 2010" />
+            <figcaption class="t-mono"><span>DOSSIER A-110</span><span>NUMÉRIQUE</span></figcaption>
+          </figure>
+          <div class="era-meta">
+            <span class="era-year t-serif-xl">10</span>
+            <p class="t-lab">Années 2010 — des agencements ouverts et fonctionnels</p>
+          </div>
+        </div>
+
+        <div class="era" data-era="2020">
+          <figure class="era-fig" data-cursor="ARCHIVE">
+            <img src="/photos/maison-2020.jpg" loading="lazy" alt="Maison contemporaine en pierre sèche et enduit clair, porche cathédrale au plafond bois, lumière dorée — réalisation Carène des années 2020" />
+            <figcaption class="t-mono"><span>DOSSIER A-120</span><span>NUMÉRIQUE</span></figcaption>
+          </figure>
+          <div class="era-meta">
+            <span class="era-year t-serif-xl">20</span>
+            <p class="t-lab">Années 2020 — matériaux performants et responsables</p>
+          </div>
+        </div>
+
+        <blockquote class="her-quote">
+          <p class="t-serif-l" data-rv>L'expérience se transmet,<br>les valeurs demeurent,<br><span class="it">l'ambition progresse.</span></p>
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- 06 · MATIÈRES -->
+    <section class="ch ch-light ch-matieres" id="matieres" data-ch="5" data-num="05" data-name="Matières">
       <div class="frame">
         <div class="mat-row" id="matRow">
           <div class="mat-lead">
-            <header class="ch-head static">
-              <span class="t-lab" data-rv-fade>Chapitre V — Nuancier</span>
-            </header>
-            <h2 class="t-serif-l" data-rv>La matière est<br><span class="it">notre seule décoration.</span></h2>
+            <span class="t-lab" data-rv-fade>Matières d'ici</span>
+            <h2 class="t-serif-l" data-rv>Design maîtrisé,<br><span class="it">matériaux choisis.</span></h2>
+            <p class="t-body" data-rv data-rv-at="0.05">Extraits de nos réalisations —
+            la pierre, le bois, l'enduit et la tuile composent
+            des maisons faites pour durer.</p>
           </div>
-          <article class="mat" data-mat="travertin" data-cursor="MATIÈRE">
-            <div class="mat-fig"><canvas width="640" height="880"></canvas></div>
-            <div class="mat-cap">
-              <i class="t-mono">M.01</i>
-              <h3>Travertin Navona</h3>
-              <p class="t-mono">TIVOLI, IT — ADOUCI — SOLS, NOYAU</p>
-            </div>
+          <article class="mat" data-cursor="MATIÈRE">
+            <div class="mat-fig"><img src="/photos/maison-2020.jpg" style="object-position: 18% 62%" loading="lazy" alt="Détail d'un mur en pierre sèche calcaire, réalisation Carène" /></div>
+            <div class="mat-cap"><i class="t-mono">M.01</i><h3>Pierre sèche</h3><p class="t-mono">VOILE DE FAÇADE — CALCAIRE LOCAL</p></div>
           </article>
-          <article class="mat" data-mat="beton" data-cursor="MATIÈRE">
-            <div class="mat-fig"><canvas width="640" height="880"></canvas></div>
-            <div class="mat-cap">
-              <i class="t-mono">M.02</i>
-              <h3>Béton blanc</h3>
-              <p class="t-mono">COULÉ EN PLACE — BRUT DE SCIAGE — DALLES</p>
-            </div>
+          <article class="mat" data-cursor="MATIÈRE">
+            <div class="mat-fig"><img src="/photos/maison-galets.jpg" style="object-position: 72% 78%" loading="lazy" alt="Muret de galets roulés maçonnés, typique de la vallée du Rhône" /></div>
+            <div class="mat-cap"><i class="t-mono">M.02</i><h3>Galets roulés</h3><p class="t-mono">SOUBASSEMENTS — VALLÉE DU RHÔNE</p></div>
           </article>
-          <article class="mat" data-mat="chene" data-cursor="MATIÈRE">
-            <div class="mat-fig"><canvas width="640" height="880"></canvas></div>
-            <div class="mat-cap">
-              <i class="t-mono">M.03</i>
-              <h3>Chêne fumé</h3>
-              <p class="t-mono">JURA, FR — HUILÉ — PLANCHERS, MENUISERIES</p>
-            </div>
+          <article class="mat" data-cursor="MATIÈRE">
+            <div class="mat-fig"><img src="/photos/maison-2020.jpg" style="object-position: 62% 30%" loading="lazy" alt="Plafond de porche en lames de bois clair d'une maison Carène" /></div>
+            <div class="mat-cap"><i class="t-mono">M.03</i><h3>Bois</h3><p class="t-mono">SOUS-FACES &amp; VOLETS COULISSANTS</p></div>
           </article>
-          <article class="mat" data-mat="bronze" data-cursor="MATIÈRE">
-            <div class="mat-fig"><canvas width="640" height="880"></canvas></div>
-            <div class="mat-cap">
-              <i class="t-mono">M.04</i>
-              <h3>Bronze patiné</h3>
-              <p class="t-mono">FONDERIE, CH — CIRÉ — HUISSERIES, COLONNES</p>
-            </div>
+          <article class="mat" data-cursor="MATIÈRE">
+            <div class="mat-fig"><img src="/photos/renovation-ferme.jpg" style="object-position: 50% 22%" loading="lazy" alt="Toiture en tuiles canal nuancées d'une ferme rénovée par Carène" /></div>
+            <div class="mat-cap"><i class="t-mono">M.04</i><h3>Tuile</h3><p class="t-mono">COUVERTURES — TERRES CUITES NUANCÉES</p></div>
           </article>
-          <article class="mat" data-mat="verre" data-cursor="MATIÈRE">
-            <div class="mat-fig"><canvas width="640" height="880"></canvas></div>
-            <div class="mat-cap">
-              <i class="t-mono">M.05</i>
-              <h3>Verre extra-clair</h3>
-              <p class="t-mono">FLOAT BAS CARBONE — H. 3,20 M — ENVELOPPE</p>
-            </div>
+          <article class="mat" data-cursor="MATIÈRE">
+            <div class="mat-fig"><img src="/photos/maison-terrasse-couverte.jpg" style="object-position: 40% 45%" loading="lazy" alt="Enduit minéral clair et structure métallique d'une villa contemporaine Carène" /></div>
+            <div class="mat-cap"><i class="t-mono">M.05</i><h3>Enduit</h3><p class="t-mono">FAÇADES MINÉRALES — TEINTES CLAIRES</p></div>
           </article>
         </div>
       </div>
     </section>
 
-    <!-- VI · LES ŒUVRES -->
-    <section class="ch ch-oeuvres" id="oeuvres" data-ch="6" data-num="VI" data-name="Les œuvres">
-      <div class="frame">
-        <header class="ch-head">
-          <span class="t-lab" data-rv-fade>Chapitre VI — Œuvres choisies 2019—2026</span>
+    <!-- 07 · RÉALISATIONS -->
+    <section class="ch ch-light ch-realisations" id="realisations" data-ch="6" data-num="06" data-name="Réalisations">
+      <div class="light-in">
+        <header class="lt-head">
+          <span class="t-lab" data-rv-fade>45 réalisations — maisons, villas, extensions</span>
+          <h2 class="t-serif-xl" data-rv>Des maisons<br><span class="it">qui vous ressemblent.</span></h2>
         </header>
-        <ul class="works" id="works">
-          <li class="work" data-shot="0" data-cursor="VOIR">
-            <i class="t-mono">01</i>
-            <h3>Villa Vespera</h3>
-            <span class="work-meta t-mono">LUGANO, CH — 2025 — 640 M²</span>
-          </li>
-          <li class="work" data-shot="1" data-cursor="VOIR">
-            <i class="t-mono">02</i>
-            <h3>Casa Traverta</h3>
-            <span class="work-meta t-mono">MALLORCA, ES — 2024 — 480 M²</span>
-          </li>
-          <li class="work" data-shot="2" data-cursor="VOIR">
-            <i class="t-mono">03</i>
-            <h3>Maison Brume</h3>
-            <span class="work-meta t-mono">NORMANDIE, FR — 2023 — 320 M²</span>
-          </li>
-          <li class="work" data-shot="3" data-cursor="VOIR">
-            <i class="t-mono">04</i>
-            <h3>Sei-An House</h3>
-            <span class="work-meta t-mono">KYOTO, JP — 2022 — 210 M²</span>
-          </li>
-          <li class="work" data-shot="4" data-cursor="VOIR">
-            <i class="t-mono">05</i>
-            <h3>Pavillon Dune</h3>
-            <span class="work-meta t-mono">COMPORTA, PT — 2026 — EN COURS</span>
-          </li>
-        </ul>
-        <figure class="work-peek" id="workPeek" aria-hidden="true"><img alt="" id="workPeekImg" /></figure>
       </div>
-    </section>
-
-    <!-- VII · PLANCHES -->
-    <section class="ch ch-planches" id="planches" data-ch="7" data-num="VII" data-name="Planches">
-      <div class="frame">
-        <header class="ch-head">
-          <span class="t-lab" data-rv-fade>Chapitre VII — Archives de l'atelier</span>
-        </header>
+      <div class="strip-zone">
         <div class="strip-wrap" data-cursor="GLISSER">
-          <div class="strip" id="strip"></div>
+          <div class="strip" id="strip">
+            <figure class="landscape"><img src="/photos/maison-2020.jpg" loading="lazy" alt="Maison contemporaine en pierre sèche et enduit, porche cathédrale, à l'heure dorée" draggable="false" /><figcaption class="t-mono"><span>MAISON</span><span>PIERRE, ENDUIT &amp; BOIS</span></figcaption></figure>
+            <figure class="portrait"><img src="/photos/maison-terrasse-couverte.jpg" loading="lazy" alt="Villa à étage, terrasse couverte sur poteaux acier, colline boisée en arrière-plan" draggable="false" /><figcaption class="t-mono"><span>VILLA</span><span>TERRASSE COUVERTE</span></figcaption></figure>
+            <figure class="landscape"><img src="/photos/renovation-ferme.jpg" loading="lazy" alt="Ferme en pierre entièrement rénovée, toitures neuves en tuiles canal" draggable="false" /><figcaption class="t-mono"><span>RÉNOVATION</span><span>BÂTI ANCIEN TRANSFORMÉ</span></figcaption></figure>
+            <figure class="landscape"><img src="/photos/maison-galets.jpg" loading="lazy" alt="Maison de plain-pied, murets de galets roulés et œil-de-bœuf, jardin de graminées" draggable="false" /><figcaption class="t-mono"><span>MAISON</span><span>GALETS &amp; ŒIL-DE-BŒUF</span></figcaption></figure>
+            <figure class="landscape"><img src="/photos/maison-2010.jpg" loading="lazy" alt="Villa cubique blanche, pergola bioclimatique anthracite et piscine" draggable="false" /><figcaption class="t-mono"><span>VILLA</span><span>PISCINE &amp; PERGOLA</span></figcaption></figure>
+            <figure class="landscape"><img src="/photos/maison-monopente.jpg" loading="lazy" alt="Maison de plain-pied contemporaine, toit monopente, olivier et mur de soutènement en pierre" draggable="false" /><figcaption class="t-mono"><span>MAISON</span><span>PLAIN-PIED MONOPENTE</span></figcaption></figure>
+            <figure class="landscape"><img src="/photos/maison-piscine-soir.jpg" loading="lazy" alt="Maison contemporaine au crépuscule, piscine et terrasse en cours de soirée d'été" draggable="false" /><figcaption class="t-mono"><span>MAISON</span><span>SOIR D'ÉTÉ</span></figcaption></figure>
+            <figure class="landscape"><img src="/photos/renovation-coteau.jpg" loading="lazy" alt="Maison de coteau en cours de rénovation, soubassement en galets remis en valeur" draggable="false" /><figcaption class="t-mono"><span>RÉNOVATION</span><span>COTEAU — EN CHANTIER</span></figcaption></figure>
+            <figure class="landscape"><img src="/photos/chantier-2.jpg" loading="lazy" alt="Maison à toit monopente récemment livrée, enduits clairs et garage attenant" draggable="false" /><figcaption class="t-mono"><span>LIVRAISON</span><span>MONOPENTE &amp; GARAGE</span></figcaption></figure>
+            <figure class="landscape"><img src="/photos/real-1.jpg" loading="lazy" alt="Maison cubique à deux volumes, casquette béton, terrain en cours d'aménagement" draggable="false" /><figcaption class="t-mono"><span>MAISON</span><span>DEUX VOLUMES</span></figcaption></figure>
+          </div>
         </div>
         <div class="strip-bar"><i id="stripBar"></i></div>
       </div>
+      <div class="light-in">
+        <ul class="typos t-lab" data-rv-fade>
+          <li>Maison</li><li>Villa</li><li>Extension</li><li>Projet atypique</li><li>Locaux pro</li><li>Logement collectif</li><li>Rénovation intégrale</li>
+        </ul>
+      </div>
     </section>
 
-    <!-- VIII · NOCTURNE -->
-    <section class="ch ch-nocturne" id="nocturne" data-ch="8" data-num="VIII" data-name="Nocturne">
+    <!-- 08 · OPPORTUNITÉ — MAISON DU RAMEUR -->
+    <section class="ch ch-light ch-rameur" id="rameur" data-ch="7" data-num="07" data-name="Opportunité">
+      <div class="light-in ram-grid">
+        <figure class="ram-fig" data-cursor="AVANT">
+          <img src="/photos/rameur-avant.jpg" loading="lazy" alt="La Maison du Rameur à Bourg-de-Péage avant transformation : bâtiment à toiture courbe entouré d'arbres" />
+          <figcaption class="t-mono"><span>ÉTAT EXISTANT</span><span>BOURG-DE-PÉAGE</span></figcaption>
+        </figure>
+        <div class="ram-txt">
+          <span class="t-lab" data-rv-fade>Opportunité — projet en exclusivité</span>
+          <h2 class="t-serif-l" data-rv>Loft<br><span class="it">« Maison du Rameur »</span></h2>
+          <p class="t-body" data-rv data-rv-at="0.05">À Bourg-de-Péage, un bâtiment à la toiture en carène
+          entame une nouvelle vie. Uniquement 8 lots, de 61 à 170 m²,
+          avec grands garages attenants.</p>
+          <ul class="ram-facts t-mono">
+            <li><b>8</b><span>LOTS UNIQUEMENT</span></li>
+            <li><b>61–170</b><span>M² PAR LOT</span></li>
+            <li><b>GARAGES</b><span>ATTENANTS</span></li>
+          </ul>
+          <a class="btn-line" href="#contact" data-cursor="ÉCRIRE">Être informé de la commercialisation</a>
+          <p class="ram-note t-mono">PERSPECTIVES 3D ÉVOLUTIVES — COMMERCIALISATION LANCÉE</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 09 · L'ÉQUIPE -->
+    <section class="ch ch-light ch-equipe" id="equipe" data-ch="8" data-num="08" data-name="L'équipe">
+      <div class="light-in">
+        <header class="lt-head">
+          <span class="t-lab" data-rv-fade>Une vision commune</span>
+          <h2 class="t-serif-xl" data-rv>Faire vivre<br><span class="it">l'ADN de Carène.</span></h2>
+          <p class="t-body maxw" data-rv data-rv-at="0.05">Aujourd'hui, une nouvelle génération prolonge cette histoire —
+          avec la même exigence, la même attention portée aux détails, et le même
+          engagement pour une construction de qualité. Respecter l'histoire,
+          regarder vers l'avenir.</p>
+        </header>
+
+        <div class="team">
+          <figure class="member" data-cursor="">
+            <img src="/photos/equipe-timothee-rousset.jpg" loading="lazy" alt="Portrait de Timothée Rousset, dirigeant de Carène" />
+            <figcaption><h3>Timothée Rousset</h3><p class="t-lab">Dirigeant — relation projet &amp; suivi de chantiers</p></figcaption>
+          </figure>
+          <figure class="member" data-cursor="">
+            <img src="/photos/equipe-jean-marc-munia.jpg" loading="lazy" alt="Portrait de Jean-Marc Munia, relation client chez Carène" />
+            <figcaption><h3>Jean Marc Munia</h3><p class="t-lab">Relation client</p></figcaption>
+          </figure>
+        </div>
+
+        <div class="chiffres">
+          <div class="chiffre"><b class="t-serif-xl">1979</b><span class="t-lab">Année de création</span></div>
+          <div class="chiffre"><b class="t-serif-xl">+700</b><span class="t-lab">Années d'expérience accumulée</span></div>
+          <div class="chiffre"><b class="t-serif-xl">45</b><span class="t-lab">Réalisations</span></div>
+        </div>
+
+        <div class="faq" id="faq">
+          <details class="faq-it">
+            <summary data-cursor="OUVRIR">Où intervenez-vous ?<i></i></summary>
+            <p class="t-body">Principalement en Drôme et en Ardèche, mais également dans
+            l'ensemble du quart sud-est de la France. Contactez-nous pour étudier
+            la faisabilité de votre projet dans votre secteur.</p>
+          </details>
+          <details class="faq-it">
+            <summary data-cursor="OUVRIR">Quelles garanties proposez-vous ?<i></i></summary>
+            <p class="t-body">Toutes nos constructions bénéficient des garanties légales :
+            garantie décennale (10 ans sur la structure), garantie de parfait
+            achèvement (1 an après réception) et garantie biennale (2 ans sur les
+            équipements).</p>
+          </details>
+          <details class="faq-it">
+            <summary data-cursor="OUVRIR">Combien de temps dure un projet ?<i></i></summary>
+            <p class="t-body">La durée varie selon la complexité et la nature du projet.
+            En moyenne, comptez entre 10 et 14 mois de l'étude à la livraison —
+            avec un planning précis dès la signature et un suivi rigoureux à
+            chaque étape.</p>
+          </details>
+          <details class="faq-it">
+            <summary data-cursor="OUVRIR">Comment sont fixés vos budgets ?<i></i></summary>
+            <p class="t-body">Chaque projet est unique : nous travaillons sur-mesure, en
+            fonction de vos envies, de votre terrain et de votre budget — avec un
+            devis détaillé et transparent avant tout engagement. Nous pouvons aussi
+            vous accompagner dans la recherche de votre terrain.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 · CONTACT — l'heure bleue -->
+    <section class="ch ch-dark ch-contact" id="contact" data-ch="9" data-num="09" data-name="Contact">
       <div class="frame">
         <header class="ch-head">
-          <span class="t-lab" data-rv-fade>Chapitre VIII — La maison s'allume</span>
+          <span class="t-lab lab-light" data-rv-fade>La maison s'allume</span>
         </header>
-        <p class="noc-line t-body" data-rv>La nuit, les maisons<br>se souviennent de la lumière.</p>
-        <div class="noc-contact">
-          <span class="t-lab" data-rv-fade>Nouveau projet — commencer une conversation</span>
-          <a class="noc-mail t-serif-l" href="mailto:atelier@ombra.archi" data-cursor="ÉCRIRE" data-rv data-rv-at="0.3">atelier@ombra.archi</a>
+        <div class="ct-grid">
+          <div class="ct-left">
+            <p class="ct-line t-serif-l" data-rv data-rv-at="0.18">Un projet commence toujours<br><span class="it">par une conversation.</span></p>
+            <div class="ct-coords t-mono" data-rv-fade>
+              <a href="tel:+33673216500" data-cursor="APPELER">06 73 21 65 00</a>
+              <a href="mailto:contact@carene.net" data-cursor="ÉCRIRE">contact@carene.net</a>
+              <div class="ct-socials">
+                <a href="https://www.facebook.com/MaisonsCarene" target="_blank" rel="noopener" data-cursor="VOIR">FACEBOOK</a>
+                <a href="https://www.instagram.com/carene.createurdelieuxdevie" target="_blank" rel="noopener" data-cursor="VOIR">INSTAGRAM</a>
+                <a href="https://www.linkedin.com/company/carene-actu" target="_blank" rel="noopener" data-cursor="VOIR">LINKEDIN</a>
+              </div>
+            </div>
+          </div>
+          <form class="ct-form" id="ctForm" novalidate>
+            <div class="f-row">
+              <label class="f-field"><span class="t-lab">Prénom *</span><input name="prenom" type="text" autocomplete="given-name" required /></label>
+              <label class="f-field"><span class="t-lab">Nom *</span><input name="nom" type="text" autocomplete="family-name" required /></label>
+            </div>
+            <div class="f-row">
+              <label class="f-field"><span class="t-lab">Téléphone *</span><input name="tel" type="tel" autocomplete="tel" required /></label>
+              <label class="f-field"><span class="t-lab">Email *</span><input name="email" type="email" autocomplete="email" required /></label>
+            </div>
+            <label class="f-field"><span class="t-lab">Votre projet *</span><textarea name="message" rows="4" required placeholder="Construction, rénovation, extension… dites-nous tout."></textarea></label>
+            <p class="f-error t-mono" id="fError" role="alert"></p>
+            <button class="btn-line btn-submit" type="submit" data-cursor="ENVOYER">Parlons de votre projet</button>
+            <p class="f-note t-mono">CE BOUTON OUVRE VOTRE MESSAGERIE — VOTRE MESSAGE PART VERS CONTACT@CARENE.NET</p>
+          </form>
         </div>
-        <footer class="noc-foot t-mono">
-          <span>OMBRA — LUGANO · KYOTO · ÉTUDE EXPÉRIMENTALE 2026 · VILLA VESPERA, DE L'AUBE À LA NUIT</span>
+        <footer class="ct-foot t-mono">
+          <span>CARÈNE — CRÉATEUR DE LIEUX DE VIE · DEPUIS 1979</span>
+          <span>DRÔME · ARDÈCHE · QUART SUD-EST</span>
+          <span>GARANTIES DÉCENNALE · PARFAIT ACHÈVEMENT · BIENNALE</span>
         </footer>
       </div>
     </section>
@@ -322,8 +466,9 @@
   </main>
 
   <noscript>
-    <div style="position:fixed;inset:0;background:#0d0b08;color:#eae3d4;display:grid;place-items:center;font-family:serif;text-align:center;padding:2rem;z-index:99">
-      <p>OMBRA — atelier d'architecture.<br>Cette expérience nécessite JavaScript.<br>atelier@ombra.archi</p>
+    <div style="position:fixed;inset:0;background:#f0eade;color:#152b25;display:grid;place-items:center;font-family:serif;text-align:center;padding:2rem;z-index:99">
+      <p>CARÈNE — Créateur de lieux de vie. Construction &amp; rénovation depuis 1979, Drôme · Ardèche.<br>
+      06 73 21 65 00 — contact@carene.net</p>
     </div>
   </noscript>
 
