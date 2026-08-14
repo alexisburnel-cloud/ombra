@@ -154,9 +154,7 @@ export class App {
 
     /* le trait s'efface quand la matière arrive */
     if (this.loader.done) {
-      const bump = smooth(0.06, 0.3, l2) * (1 - smooth(0.6, 0.9, l2));
-      this.villa.lineUniforms.uOpacity.value =
-        clamp((1 - smooth(0.12, 0.6, l1)) + bump * 0.25, 0, 1);
+      this.villa.lineUniforms.uOpacity.value = clamp(1 - smooth(0.12, 0.6, l1), 0, 1);
     }
 
     /* éclaté par lots, aller-retour */

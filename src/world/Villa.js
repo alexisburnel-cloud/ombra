@@ -143,10 +143,11 @@ export class Villa {
     const gEtage = new THREE.Group();
     const etage = mesh(box(11.0, 2.55, 7.4), mats.boisGris, 1.2, 4.85, -1.2);
     gEtage.add(etage); addEdges(etage);
-    /* bandeau vitré filant sud de l'étage — tableau sombre en retrait */
-    gEtage.add(mesh(box(9.9, 1.3, 0.08), mats.inkMetal, 1.2, 4.95, 2.44, { cast: false }));
-    const ruban = new THREE.Mesh(box(9.6, 1.1, 0.06), mats.glass);
-    ruban.position.set(1.2, 4.95, 2.53);
+    /* bandeau vitré filant sud de l'étage — fond sombre devant le bardage,
+       le verre par-dessus : le bandeau lit « intérieur », pas « bois vitré » */
+    gEtage.add(mesh(box(9.72, 1.16, 0.016), mats.inkMetal, 1.2, 4.95, 2.516, { cast: false }));
+    const ruban = new THREE.Mesh(box(9.6, 1.1, 0.05), mats.glass);
+    ruban.position.set(1.2, 4.95, 2.56);
     gEtage.add(ruban);
     [-2.4, 0, 2.4, 4.6].forEach((x) => gEtage.add(mesh(box(0.08, 1.1, 0.1), mats.alu, 1.2 + x - 1.1, 4.95, 2.53, { cast: false })));
     this.group.add(gEtage);
@@ -360,19 +361,20 @@ export class Villa {
     scene.add(this.porchLight);
   }
 
-  /* e : éclaté par lots, 0..1 — chorégraphie de coordination */
+  /* e : éclaté par lots, 0..1 — on dépose par le haut, chaque couche
+     part avant celle qu'elle surplombe (aucun croisement de plans) */
   setExplode(e) {
     const p = this.parts, b = this.base;
     const s = (d) => smooth(d, d + 0.5, e);
+    p.couv.position.y = b.couv.y + s(0.14) * 7.6;
+    p.etage.position.y = b.etage.y + s(0.26) * 5.6;
+    p.charp.position.y = b.charp.y + s(0.36) * 4.2;
+    p.murs.position.y = b.murs.y + s(0.44) * 2.6;
+    p.dalle.position.y = b.dalle.y + s(0.52) * 1.3;
     p.fond.position.y = b.fond.y - s(0.0) * 2.4;
-    p.dalle.position.y = b.dalle.y + s(0.1) * 1.3;
-    p.murs.position.y = b.murs.y + s(0.18) * 2.6;
-    p.charp.position.y = b.charp.y + s(0.28) * 4.2;
-    p.etage.position.y = b.etage.y + s(0.34) * 5.6;
-    p.couv.position.y = b.couv.y + s(0.42) * 7.6;
-    p.menui.position.z = b.menui.z + s(0.26) * 3.6;
-    p.fini.position.z = b.fini.z + s(0.16) * 3.0;
-    p.interieur.position.y = b.interieur.y + s(0.22) * 1.3;
+    p.menui.position.z = b.menui.z + s(0.3) * 3.6;
+    p.fini.position.z = b.fini.z + s(0.18) * 3.0;
+    p.interieur.position.y = b.interieur.y + s(0.48) * 1.1;
   }
 
   setDoor(t) {

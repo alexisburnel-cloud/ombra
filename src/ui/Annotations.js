@@ -54,7 +54,7 @@ export class Annotations {
 export class LotsList {
   constructor() {
     this.items = $$('#lots li');
-    this.keys = { fond: 0.0, dalle: 0.1, murs: 0.18, charp: 0.28, couv: 0.42, menu: 0.26, fini: 0.16 };
+    this.keys = { fond: 0.0, dalle: 0.52, murs: 0.44, charp: 0.36, couv: 0.14, menu: 0.3, fini: 0.18 };
   }
 
   update(e) {
