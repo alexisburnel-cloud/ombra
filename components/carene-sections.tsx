@@ -21,7 +21,7 @@ const DECENNIES = [
 export function CareneSections() {
   return (
     <>
-      <section id="realisations" className="bg-neutral-950 px-6 py-24 text-white md:px-16 md:py-32">
+      <section id="realisations" className="bg-neutral-950 px-6 py-16 text-white md:px-16 md:py-28">
         <p className="mb-4 text-xs uppercase tracking-[0.45em] text-[#5adfa5]">
           45 réalisations — maisons, villas, extensions
         </p>
@@ -46,7 +46,7 @@ export function CareneSections() {
         </div>
       </section>
 
-      <section id="heritage" className="bg-[#0d1210] px-6 py-24 text-white md:px-16 md:py-32">
+      <section id="heritage" className="bg-[#0d1210] px-6 py-16 text-white md:px-16 md:py-28">
         <p className="mb-4 text-xs uppercase tracking-[0.45em] text-[#5adfa5]">Savoir évoluer avec le temps</p>
         <h2 className="max-w-3xl text-4xl font-semibold leading-[0.95] tracking-[-0.05em] md:text-7xl">
           Quatre décennies, une exigence.
@@ -72,7 +72,7 @@ export function CareneSections() {
         </p>
       </section>
 
-      <section id="equipe" className="bg-neutral-950 px-6 py-24 text-white md:px-16 md:py-32">
+      <section id="equipe" className="bg-neutral-950 px-6 py-16 text-white md:px-16 md:py-28">
         <p className="mb-4 text-xs uppercase tracking-[0.45em] text-[#5adfa5]">Une vision commune</p>
         <h2 className="max-w-3xl text-4xl font-semibold leading-[0.95] tracking-[-0.05em] md:text-7xl">
           Faire vivre l&apos;ADN de Carène.
@@ -106,15 +106,15 @@ export function CareneSections() {
               </figcaption>
             </figure>
           </div>
-          <div className="flex flex-col justify-center gap-10">
+          <div className="grid grid-cols-2 gap-6 md:flex md:flex-col md:justify-center md:gap-10">
             <div>
               <span className="block text-6xl font-semibold tracking-[-0.05em] text-[#40c98f] md:text-8xl">1979</span>
               <span className="mt-2 block text-xs uppercase tracking-[0.3em] text-white/55">Année de création</span>
             </div>
             <div>
-              <span className="block text-6xl font-semibold tracking-[-0.05em] text-[#40c98f] md:text-8xl">+700</span>
+              <span className="block text-6xl font-semibold tracking-[-0.05em] text-[#40c98f] md:text-8xl">45</span>
               <span className="mt-2 block text-xs uppercase tracking-[0.3em] text-white/55">
-                Années d&apos;expérience accumulée
+                Réalisations — maisons, villas, extensions
               </span>
             </div>
           </div>

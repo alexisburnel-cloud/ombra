@@ -1,6 +1,6 @@
 export function CTASection() {
   return (
-    <section id="contact" className="grid min-h-screen place-items-center bg-neutral-950 px-6 text-center text-white">
+    <section id="contact" className="grid place-items-center bg-neutral-950 px-6 py-20 text-center text-white md:py-32">
       <div>
         <p className="mb-5 text-xs uppercase tracking-[0.45em] text-[#40c98f]/80">Carène — créateur de lieux de vie</p>
         <h2 className="mx-auto max-w-4xl text-5xl font-semibold tracking-[-0.06em] md:text-8xl">
