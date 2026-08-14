@@ -107,6 +107,31 @@ export function ScrollScene() {
           <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,0.72)_0%,rgba(0,0,0,0.18)_42%,rgba(0,0,0,0)_72%)]" />
           {ready ? <HeroText frame={activeFrame} /> : null}
           {ready ? <ProgressIndicator progress={scrollProgress} /> : null}
+          {/* indication de geste : visible tant qu'on n'a pas commencé à défiler */}
+          <div
+            className={`pointer-events-none absolute bottom-4 left-1/2 z-30 -translate-x-1/2 transition-opacity duration-700 ${
+              ready && scrollProgress < 0.015 ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            <div className="flex items-center gap-3 rounded-full border border-white/15 bg-black/45 px-5 py-2.5 backdrop-blur-md">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/90">
+                Faites défiler
+              </span>
+              <svg
+                className="animate-bounce"
+                width="13"
+                height="13"
+                viewBox="0 0 16 16"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path d="M2 5.5 L8 11.5 L14 5.5" stroke="#40c98f" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+            <p className="mt-1.5 text-center text-[10px] uppercase tracking-[0.22em] text-white/50">
+              la maison se construit
+            </p>
+          </div>
         </div>
       </section>
       <OrbitSection />
