@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@source "../app";
+@source "../components";
 
 :root {
   color-scheme: dark;
@@ -28,3 +30,5 @@ button,
 a {
   touch-action: manipulation;
 }
+
+html, body { overflow-x: hidden; }

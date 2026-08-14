@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CanvasAnimation, type CanvasAnimationHandle } from "@/components/canvas-animation";
 import { CTASection } from "@/components/cta-section";
+import { CareneSections } from "@/components/carene-sections";
 import { HeroText } from "@/components/hero-text";
 import { LoadingScreen } from "@/components/loading-screen";
 import { Navbar } from "@/components/navbar";
@@ -96,38 +97,7 @@ export function ScrollScene() {
     <>
       <LoadingScreen progress={visibleLoaderProgress} status={loaderStatus} error={error} />
       <Navbar />
-      <section id="top" className="relative grid min-h-screen place-items-center overflow-hidden bg-neutral-950 px-6 text-center text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(255,255,255,0.16),transparent_34%),linear-gradient(180deg,#111_0%,#050505_70%)]" />
-        <div className="absolute bottom-0 left-1/2 h-72 w-[78rem] -translate-x-1/2 rounded-[100%] bg-white/10 blur-3xl" />
-        <div className="relative pt-24">
-          <p className="mb-6 text-xs uppercase tracking-[0.45em] text-white/45">Carène — depuis 1979</p>
-          <h1 className="mx-auto max-w-6xl text-6xl font-semibold leading-[0.86] tracking-[-0.075em] md:text-9xl">
-            Créateur de lieux de vie.
-          </h1>
-          <p className="mx-auto mt-8 max-w-2xl text-base leading-7 text-white/58 md:text-xl md:leading-8">
-            Du premier trait au dernier détail : vivez la naissance d&apos;une maison Carène, de l&apos;esquisse à la remise des clés — en Drôme, Ardèche et quart sud-est.
-          </p>
-          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <a href="#story" className="rounded-full bg-white px-7 py-4 text-sm font-semibold uppercase tracking-[0.22em] text-black transition hover:bg-white/85">
-              Voir la construction
-            </a>
-            <a href="#contact" className="rounded-full border border-white/15 px-7 py-4 text-sm font-semibold uppercase tracking-[0.22em] text-white/80 transition hover:border-white hover:text-white">
-              Votre projet
-            </a>
-          </div>
-        </div>
-      </section>
-      <section className="grid min-h-[70vh] place-items-center bg-[#080808] px-6 text-center text-white">
-        <div className="max-w-4xl">
-          <p className="mb-5 text-xs uppercase tracking-[0.45em] text-white/40">Notre métier</p>
-          <h2 className="text-5xl font-semibold leading-[0.95] tracking-[-0.06em] md:text-8xl">
-            Chaque étape est menée avec intention.
-          </h2>
-          <p className="mx-auto mt-8 max-w-xl text-white/55">
-            La suite est interactive : continuez à faire défiler, la maison se construit sous vos yeux, étape par étape.
-          </p>
-        </div>
-      </section>
+      <div id="top" />
       <section id="story" data-scroll-scene className="relative bg-black" style={{ height: SCROLL_HEIGHT }}>
         <div className="sticky top-0 h-screen overflow-hidden">
           <div style={{ opacity: scrollProgress > 0.92 ? Math.max(0, 1 - (scrollProgress - 0.92) / 0.08) : 1 }}>
@@ -139,6 +109,7 @@ export function ScrollScene() {
         </div>
       </section>
       <OrbitSection />
+      <CareneSections />
       <CTASection />
     </>
   );

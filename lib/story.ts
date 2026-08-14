@@ -6,7 +6,7 @@ export type StoryChapter = {
 };
 
 export const STORY_CHAPTERS: StoryChapter[] = [
-  { start: 1, end: 75, eyebrow: "Esquisse", title: "Tout commence\npar un trait." },
+  { start: 1, end: 75, eyebrow: "Carène — depuis 1979", title: "Créateur de\nlieux de vie." },
   { start: 75, end: 175, eyebrow: "Plans", title: "L'idée\ndevient plan." },
   { start: 175, end: 325, eyebrow: "Fondations", title: "Le plan\ndevient structure." },
   { start: 325, end: 450, eyebrow: "Structure", title: "La structure\nprend vie." },

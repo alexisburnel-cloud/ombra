@@ -14,9 +14,11 @@ export function Navbar() {
           </svg>
           CARÈNE
         </a>
-        <div className="hidden items-center gap-8 text-xs uppercase tracking-[0.24em] text-white/55 md:flex">
+        <div className="hidden items-center gap-8 text-xs uppercase tracking-[0.24em] text-white/55 lg:flex">
           <a className="transition hover:text-white" href="#story">La construction</a>
           <a className="transition hover:text-white" href="#reveal">La maison</a>
+          <a className="transition hover:text-white" href="#realisations">Réalisations</a>
+          <a className="transition hover:text-white" href="#equipe">L&apos;équipe</a>
           <a className="transition hover:text-white" href="#contact">Contact</a>
         </div>
         <a
