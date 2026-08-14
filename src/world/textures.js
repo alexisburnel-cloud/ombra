@@ -23,7 +23,7 @@ function tex(canvas, rx = 1, ry = rx) {
   t.colorSpace = THREE.SRGBColorSpace;
   t.wrapS = t.wrapT = THREE.RepeatWrapping;
   t.repeat.set(rx, ry);
-  t.anisotropy = 4;
+  t.anisotropy = 8;
   return t;
 }
 
@@ -52,7 +52,7 @@ export function drystoneCanvas(size = 512) {
     const face = fbm(u * 26 + cid, v * 26, 3);
     c = mixc(c, [164, 150, 126], (face - 0.5) * 0.55 + 0.08);
     if (edge < 0.09) c = mixc(mortar, c, clamp(edge / 0.09, 0, 1) * 0.6);
-    const grain = (noise2(u * 240, v * 240) - 0.5) * 12;
+    const grain = (noise2(u * 120, v * 120) - 0.5) * 7;
     return [c[0] + grain, c[1] + grain, c[2] + grain * 0.9].map((x) => clamp(x, 0, 255));
   });
 }
@@ -139,7 +139,7 @@ export function boisGrisCanvas(size = 512) {
     const lame = Math.floor(u * 12);
     const lu = (u * 12) % 1;
     const fil = fbm(lame * 3.3 + 0.7, v * 2.2, 3);
-    let c = mixc(low, hi, clamp(fil + noise2(u * 80, v * 400) * 0.22, 0, 1));
+    let c = mixc(low, hi, clamp(fil + noise2(u * 60, v * 180) * 0.12, 0, 1));
     if (lu < 0.04 || lu > 0.96) c = c.map((x) => x * 0.7);
     return c.map((x) => clamp(x, 0, 255));
   });
@@ -197,8 +197,10 @@ export function betonCanvas(size = 512) {
 }
 
 export function makeTextures() {
+  const ds = drystoneCanvas();
   return {
-    drystone: tex(drystoneCanvas(), 2.6, 1.3),
+    drystone: tex(ds, 2.6, 1.3),
+    drystoneTall: tex(ds, 1.0, 2.4),
     galets: tex(galetsCanvas(), 3, 1.5),
     enduit: tex(enduitCanvas(), 3, 2),
     tuiles: tex(tuilesCanvas(), 4, 3),

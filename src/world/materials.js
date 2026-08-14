@@ -10,6 +10,9 @@ export function makeMaterials(textures) {
   const drystone = clip(new THREE.MeshStandardMaterial({
     map: textures.drystone, color: 0xcfc7b6, roughness: 0.9, metalness: 0, envMapIntensity: 0.3
   }));
+  const drystoneTall = clip(new THREE.MeshStandardMaterial({
+    map: textures.drystoneTall, color: 0xcfc7b6, roughness: 0.9, metalness: 0, envMapIntensity: 0.3
+  }));
   const galets = clip(new THREE.MeshStandardMaterial({
     map: textures.galets, color: 0xc8c0b0, roughness: 0.92, metalness: 0, envMapIntensity: 0.25
   }));
@@ -87,7 +90,7 @@ export function makeMaterials(textures) {
 
   return {
     buildPlane, clipped,
-    drystone, galets, enduit, enduitFonce, tuiles, bois, boisGris,
+    drystone, drystoneTall, galets, enduit, enduitFonce, tuiles, bois, boisGris,
     vieillePierre, beton, betonBrut, alu, glass, charpente,
     fabric, fabricDark, noyer, inkMetal, pendant, ember, plante,
     prairie, hill, canopy, canopySombre, trunk, gravier

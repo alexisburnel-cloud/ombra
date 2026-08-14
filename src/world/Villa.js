@@ -103,11 +103,11 @@ export class Villa {
     /* mur nord (enduit) */
     const nord = mesh(box(20.5, 3.2, 0.5), mats.enduit, -4.4, 1.95, -5.05);
     gMurs.add(nord); addEdges(nord);
-    /* refend & cheminée pierre traversant l'étage */
-    const chem = mesh(box(1.1, 7.4, 3.4), mats.drystone, 3.4, 3.6, -2.4);
+    /* refend & cheminée pierre traversant l'étage — appareillage adapté à la hauteur */
+    const chem = mesh(box(1.1, 7.4, 3.4), mats.drystoneTall, 3.4, 3.6, -2.4);
     gMurs.add(chem); addEdges(chem);
-    /* îlot d'entrée nord */
-    gMurs.add(mesh(box(3.6, 3.2, 0.5), mats.boisGris, -10.5, 1.95, -5.05));
+    /* îlot d'entrée nord — chêne chaleureux côté séjour */
+    gMurs.add(mesh(box(3.6, 3.2, 0.5), mats.bois, -10.5, 1.95, -5.05));
     this.group.add(gMurs);
 
     /* ═══ PORCHE CATHÉDRALE OUEST (pignon bois + tuiles) ═══ */
