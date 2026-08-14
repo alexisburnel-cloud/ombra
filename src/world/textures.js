@@ -101,7 +101,7 @@ export function enduitCanvas(size = 512) {
 /* ── tuiles terre cuite nuancées (couverture faible pente) ── */
 export function tuilesCanvas(size = 512) {
   const rows = 12, cols = 7;
-  const tones = [[172, 106, 74], [188, 122, 84], [156, 96, 70], [178, 118, 92], [166, 100, 68]];
+  const tones = [[156, 110, 86], [166, 122, 96], [144, 102, 82], [160, 118, 98], [150, 106, 84]];
   return canvasOf(size, (u, v) => {
     const row = Math.floor(v * rows);
     const off = (row % 2) * 0.5 / cols;

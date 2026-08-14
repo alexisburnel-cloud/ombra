@@ -94,9 +94,12 @@ export class Villa {
     gMurs.add(voileBas, voileHaut);
     addEdges(voileBas); addEdges(voileHaut);
     [-5.2, -1.6, 2.2].forEach((x) => gMurs.add(mesh(box(0.6, 1.25, 0.5), mats.drystone, x, 1.98, 3.15)));
-    /* pignon est en enduit */
-    const pignonEst = mesh(box(0.5, 3.2, 8.6), mats.enduit, 5.75, 1.95, -1);
-    gMurs.add(pignonEst); addEdges(pignonEst);
+    /* pignon est en enduit — percé pour la baie (z -1.3 → 2.1) */
+    const pE1 = mesh(box(0.5, 3.2, 4.0), mats.enduit, 5.75, 1.95, -3.3);
+    const pE2 = mesh(box(0.5, 3.2, 1.2), mats.enduit, 5.75, 1.95, 2.7);
+    const pE3 = mesh(box(0.5, 0.55, 3.4), mats.enduit, 5.75, 3.28, 0.4);
+    const pE4 = mesh(box(0.5, 0.4, 3.4), mats.enduit, 5.75, 0.55, 0.4);
+    gMurs.add(pE1, pE2, pE3, pE4); addEdges(pE1);
     /* mur nord (enduit) */
     const nord = mesh(box(20.5, 3.2, 0.5), mats.enduit, -4.4, 1.95, -5.05);
     gMurs.add(nord); addEdges(nord);
@@ -122,11 +125,11 @@ export class Villa {
     const pigE = pigW.clone(); pigE.position.x = -8.35;
     gCharp.add(pigW, pigE);
     addEdges(pigW);
-    /* plafond bois sous rampants */
+    /* plafond bois sous rampants — la pente monte vers le faîtage */
     const rampL = mesh(box(7.9, 0.09, 4.85), mats.bois, -12.05, 4.18, -3.06, { cast: false });
-    rampL.rotation.x = 0.352;
+    rampL.rotation.x = -0.352;
     const rampR = mesh(box(7.9, 0.09, 4.85), mats.bois, -12.05, 4.18, 1.26, { cast: false });
-    rampR.rotation.x = -0.352;
+    rampR.rotation.x = 0.352;
     gCharp.add(rampL, rampR);
     /* pannes de charpente */
     for (let i = 0; i < 4; i++) {
@@ -140,7 +143,8 @@ export class Villa {
     const gEtage = new THREE.Group();
     const etage = mesh(box(11.0, 2.55, 7.4), mats.boisGris, 1.2, 4.85, -1.2);
     gEtage.add(etage); addEdges(etage);
-    /* bandeau vitré filant sud de l'étage */
+    /* bandeau vitré filant sud de l'étage — tableau sombre en retrait */
+    gEtage.add(mesh(box(9.9, 1.3, 0.08), mats.inkMetal, 1.2, 4.95, 2.44, { cast: false }));
     const ruban = new THREE.Mesh(box(9.6, 1.1, 0.06), mats.glass);
     ruban.position.set(1.2, 4.95, 2.53);
     gEtage.add(ruban);
@@ -149,11 +153,11 @@ export class Villa {
 
     /* ═══ COUVERTURES ═══ */
     const gCouv = new THREE.Group();
-    /* toit du porche — deux rampants de tuiles */
+    /* toit du porche — deux rampants de tuiles vers le faîtage */
     const couvL = mesh(box(8.3, 0.12, 5.1), mats.tuiles, -12.05, 4.47, -3.18);
-    couvL.rotation.x = 0.352;
+    couvL.rotation.x = -0.352;
     const couvR = mesh(box(8.3, 0.12, 5.1), mats.tuiles, -12.05, 4.47, 1.38);
-    couvR.rotation.x = -0.352;
+    couvR.rotation.x = 0.352;
     gCouv.add(couvL, couvR);
     addEdges(couvL); addEdges(couvR);
     /* faîtière */
@@ -209,10 +213,10 @@ export class Villa {
     /* volet coulissant bois devant le bandeau */
     this.volet = mesh(box(2.3, 1.3, 0.07), mats.bois, 1.6, 1.98, 3.42);
     gMenui.add(this.volet);
-    /* baie pignon est */
+    /* baie pignon est — dans l'ouverture du mur */
     const bayE = makeBay(3.4, 0, 0);
     bayE.rotation.y = Math.PI / 2;
-    bayE.position.set(5.55, 0, 0.4);
+    bayE.position.set(5.72, 0, 0.4);
     gMenui.add(bayE);
     this.group.add(gMenui);
 
@@ -275,14 +279,17 @@ export class Villa {
     this.renov = new THREE.Group();
     this.renov.position.set(-34, 0, -16);
     const old1 = mesh(box(9, 3.4, 6.2), mats.vieillePierre, 0, 1.7, 0);
-    const oldPigW = new THREE.Mesh(gablePrism(9, 3.1, 1.9), mats.vieillePierre);
+    /* deux pignons minces en pierre — la ferme attend sa toiture */
+    const oldPigW = new THREE.Mesh(gablePrism(0.55, 3.1, 1.9), mats.vieillePierre);
     oldPigW.position.set(-4.5, 3.4, 0); oldPigW.castShadow = true;
-    this.renov.add(old1, oldPigW);
+    const oldPigE = new THREE.Mesh(gablePrism(0.55, 3.1, 1.9), mats.vieillePierre);
+    oldPigE.position.set(3.95, 3.4, 0); oldPigE.castShadow = true;
+    this.renov.add(old1, oldPigW, oldPigE);
     addEdges(old1);
     /* toiture neuve (descend pendant l'assemblage) */
     this.renovRoof = new THREE.Group();
-    const rL = mesh(box(9.8, 0.1, 3.75), mats.tuiles, 0, 4.42, -1.62); rL.rotation.x = 0.55;
-    const rR = mesh(box(9.8, 0.1, 3.75), mats.tuiles, 0, 4.42, 1.62); rR.rotation.x = -0.55;
+    const rL = mesh(box(9.8, 0.1, 3.75), mats.tuiles, 0, 4.42, -1.62); rL.rotation.x = -0.55;
+    const rR = mesh(box(9.8, 0.1, 3.75), mats.tuiles, 0, 4.42, 1.62); rR.rotation.x = 0.55;
     this.renovRoof.add(rL, rR);
     this.renovRoof.add(mesh(box(9.8, 0.12, 0.26), mats.inkMetal, 0, 5.32, 0, { cast: false }));
     this.renov.add(this.renovRoof);

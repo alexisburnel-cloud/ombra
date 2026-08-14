@@ -58,8 +58,10 @@ void main() {
   vec3 V = normalize(cameraPosition - vWorld);
   float fres = pow(1.0 - max(dot(V, N), 0.0), 3.5);
 
-  vec3 skyRef = mix(uHorizon, uZenith, 0.55);
-  vec3 col = mix(uDeep, skyRef, clamp(fres * 0.82 + 0.2, 0.0, 1.0));
+  vec3 skyRef = mix(uHorizon, uZenith, 0.72);
+  vec3 col = mix(uDeep, skyRef, clamp(fres * 0.75 + 0.42, 0.0, 1.0));
+  /* teinte bassin — l'eau reste de l'eau, même sous un ciel d'aube */
+  col = mix(col, vec3(0.42, 0.62, 0.58) * (0.35 + 0.65 * smoothstep(-0.05, 0.25, uSunDir.y)), 0.3);
 
   vec3 L = normalize(uSunDir);
   vec3 H = normalize(L + V);
@@ -85,7 +87,7 @@ export class Water {
       uSunColor: { value: new THREE.Color(0xffd7a6) },
       uZenith: { value: new THREE.Color(0x5c7280) },
       uHorizon: { value: new THREE.Color(0xcbb894) },
-      uDeep: { value: new THREE.Color(0x0c2426) },
+      uDeep: { value: new THREE.Color(0x21403c) },
       uCalm: { value: calm },
       uScale: { value: scale },
       uFogColor: { value: new THREE.Color(0x0a0908) },

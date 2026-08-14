@@ -48,9 +48,11 @@ export class ScrollDirector {
   update() {
     this.progress = clamp(this.scroll / this.total, 0, 1);
 
+    /* le chapitre bascule quand sa section occupe la moitié de l'écran */
+    const lookahead = this.progress + (innerHeight * 0.5) / this.total;
     let ch = 0;
     for (let i = 0; i < this.ranges.length; i++) {
-      if (this.progress >= this.ranges[i].start - 0.0001) ch = i;
+      if (lookahead >= this.ranges[i].start - 0.0001) ch = i;
     }
     if (ch !== this.chapter) {
       this.chapter = ch;

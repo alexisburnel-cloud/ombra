@@ -17,10 +17,10 @@ export class Landscape {
       m.rotation.y = r;
       this.group.add(m);
     };
-    ridge(420, 30, -40, 8, -185, 0.06);
-    ridge(360, 22, 150, 4, -160, -0.12);
-    ridge(460, 14, -90, -3, 150, 0.05);
-    ridge(560, 24, 180, -5, 200, -0.14);
+    ridge(460, 20, -40, 2, -235, 0.06);
+    ridge(400, 15, 160, 0, -210, -0.12);
+    ridge(460, 11, -90, -5, 185, 0.05);
+    ridge(560, 16, 190, -7, 240, -0.14);
 
     /* pin sylvestre — fût nu + houppier en plateaux */
     const pin = (x, z, s = 1, mat = mats.canopy) => {
