@@ -14,13 +14,20 @@ export function useFrameLoader(totalFrames = FRAME_TOTAL): FrameLoaderState {
   // Generate list of target frames based on FRAME_STEP
   const targetFrames = useRef<number[]>([]);
   if (targetFrames.current.length === 0) {
+    // Passes de couverture : toute la timeline en grossier d'abord (stride 27),
+    // puis affinage (9, puis FRAME_STEP) — permet de déverrouiller très tôt.
+    const seen = new Set<number>();
     const list: number[] = [];
-    for (let f = 1; f <= totalFrames; f += FRAME_STEP) {
-      list.push(f);
+    for (const stride of [27, 9, FRAME_STEP]) {
+      for (let f = 1; f <= totalFrames; f += stride) {
+        if (!seen.has(f)) {
+          seen.add(f);
+          list.push(f);
+        }
+      }
     }
-    // Always include the last frame to ensure a clean animation finish
-    if (totalFrames > 0 && !list.includes(totalFrames)) {
-      list.push(totalFrames);
+    if (totalFrames > 0 && !seen.has(totalFrames)) {
+      list.unshift(totalFrames);
     }
     targetFrames.current = list;
   }

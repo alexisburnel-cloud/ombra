@@ -15,7 +15,8 @@ import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { FRAME_TOTAL } from "@/lib/frames";
 
 const SCROLL_HEIGHT = "900vh";
-const MIN_LOADER_DURATION = 2400;
+const MIN_LOADER_DURATION = 700;
+const READY_THRESHOLD = 0.18; // couverture grossière complète : on ouvre, le reste arrive en fond
 
 export function ScrollScene() {
   const canvasRef = useRef<CanvasAnimationHandle | null>(null);
@@ -24,7 +25,7 @@ export function ScrollScene() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [activeFrame, setActiveFrame] = useState(1);
   
-  const ready = (status === "ready" || loadProgress >= 1) && minimumLoaderDone;
+  const ready = (status === "ready" || loadProgress >= READY_THRESHOLD) && minimumLoaderDone;
   const visibleLoaderProgress = ready ? 1 : loadProgress;
   const loaderStatus = status === "error" ? status : ready ? "ready" : "loading";
 
