@@ -14,14 +14,18 @@ export class Menu {
     this.open = false;
     this.busy = false;
 
-    /* filigrane : clone des courbes de niveau du loader */
-    const topo = $('#loaderTopo');
-    if (topo) {
-      const clone = topo.cloneNode(true);
+    /* filigrane : clone de la planche d'architecte, à l'encre claire */
+    const sheet = $('#sheetSvg');
+    if (sheet) {
+      const clone = sheet.cloneNode(true);
       clone.removeAttribute('id');
-      clone.querySelectorAll('.lt').forEach((p) => {
-        p.style.strokeDasharray = 'none';
-        p.style.strokeDashoffset = '0';
+      clone.querySelectorAll('[style]').forEach((p) => p.removeAttribute('style'));
+      clone.querySelectorAll('.bp, .bp-hatch, .bp-dim, .bp-topo, .bp-pool, .bp-dash').forEach((p) => {
+        p.style.stroke = '#e8f5ee';
+      });
+      clone.querySelectorAll('.bp-txt, .bp-cap').forEach((p) => {
+        p.style.fill = '#e8f5ee';
+        p.style.opacity = '0.6';
       });
       this.bg.appendChild(clone);
     }

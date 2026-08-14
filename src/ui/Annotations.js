@@ -3,12 +3,14 @@ import { $$ } from '../core/utils.js';
 
 /* cotes de chantier ancrées aux lots — elles suivent l'éclaté */
 const DEFS = [
-  { part: 'couv', off: [-12, 5.45, 0.6], text: 'FAÎTAGE — TUILES TERRE CUITE', flip: true },
-  { part: 'couv', off: [4.5, 6.45, 2.4], text: 'TOITURE ATTIQUE — DALLE BÉTON' },
-  { part: 'murs', off: [-0.7, 2.0, 3.7], text: 'VOILE PIERRE SÈCHE — BANDEAU VITRÉ', flip: true },
-  { part: 'etage', off: [6.6, 4.9, 1.6], text: 'BARDAGE BOIS GRISÉ' },
-  { part: 'fini', off: [13.5, 0.35, 4.2], text: 'BASSIN À DÉBORDEMENT' },
-  { part: 'fini', off: [8, -1.6, 5.9], text: 'SOUTÈNEMENT GALETS — H. 3,00 M' }
+  { part: 'couv', off: [-13.3, 6.7, -1.0], text: 'FAÎTAGE SÉJOUR — TUILES TERRE CUITE', flip: true },
+  { part: 'couv', off: [5.8, 6.8, 2.2], text: 'TOITURE ATTIQUE — DALLE BÉTON' },
+  { part: 'murs', off: [-0.4, 2.0, 3.85], text: 'VOILE PIERRE — BANDEAU VITRÉ', flip: true },
+  { part: 'etage', off: [5.9, 5.3, 2.4], text: 'SUITE — BARDAGE BOIS' },
+  { part: 'fini', off: [14, 0.35, 6.6], text: 'BASSIN 12 M — MARCHES IMMERGÉES' },
+  { part: 'fini', off: [-0.6, 3.0, 7.6], text: 'PERGOLA BIOCLIMATIQUE', flip: true },
+  { part: 'murs', off: [16.9, 2.2, -3.6], text: 'AILE GARAGE — COUR GRAVIER' },
+  { part: 'fini', off: [4, -1.6, 8.4], text: 'SOUTÈNEMENT PIERRE — H. 3,00 M' }
 ];
 
 export class Annotations {

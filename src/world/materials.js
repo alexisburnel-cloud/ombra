@@ -1,67 +1,86 @@
-import * as THREE from 'three';
+﻿import * as THREE from 'three';
+import { pbr } from './pbr.js';
 
-export function makeMaterials(textures) {
-  /* plan de construction — la maison s'élève avec le chapitre I */
+/*
+  Matériaux V3 — physiques (ambientCG CC0) + spéciaux.
+  Le plan de construction (clipping) ne s'applique qu'au bâti.
+*/
+
+export function makeMaterials() {
   const buildPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), 0);
-
   const clipped = [];
   const clip = (m) => { m.clippingPlanes = [buildPlane]; clipped.push(m); return m; };
 
-  const drystone = clip(new THREE.MeshStandardMaterial({
-    map: textures.drystone, color: 0xcfc7b6, roughness: 0.9, metalness: 0, envMapIntensity: 0.3
+  /* ── bâti ── */
+  const drystone = clip(pbr('stonewall2', {
+    repeat: [2.2, 1.1], color: 0xcfc4ae, envMapIntensity: 0.3, normalScale: 1.15
   }));
-  const drystoneTall = clip(new THREE.MeshStandardMaterial({
-    map: textures.drystoneTall, color: 0xcfc7b6, roughness: 0.9, metalness: 0, envMapIntensity: 0.3
+  const drystoneTall = clip(pbr('stonewall2', {
+    repeat: [1.1, 2.2], color: 0xcfc4ae, envMapIntensity: 0.3, normalScale: 1.15
   }));
-  const galets = clip(new THREE.MeshStandardMaterial({
-    map: textures.galets, color: 0xc8c0b0, roughness: 0.92, metalness: 0, envMapIntensity: 0.25
+  const enduit = clip(pbr('plaster', {
+    repeat: [2.6, 1.6], color: 0xe9e0cd, envMapIntensity: 0.32, normalScale: 0.65
   }));
-  const enduit = clip(new THREE.MeshStandardMaterial({
-    map: textures.enduit, color: 0xe4dcc9, roughness: 0.88, metalness: 0, envMapIntensity: 0.3
+  const enduitFonce = clip(pbr('plaster', {
+    repeat: [2.2, 1.4], color: 0x9b948a, envMapIntensity: 0.25, normalScale: 0.6
   }));
-  const enduitFonce = clip(new THREE.MeshStandardMaterial({
-    map: textures.enduit, color: 0x9d968a, roughness: 0.9, metalness: 0, envMapIntensity: 0.25
+  const tuiles = clip(pbr('tiles', {
+    repeat: [3.2, 2.2], color: 0xc9a68e, envMapIntensity: 0.22, normalScale: 1.1
   }));
-  const tuiles = clip(new THREE.MeshStandardMaterial({
-    map: textures.tuiles, color: 0x9d8471, roughness: 0.88, metalness: 0, envMapIntensity: 0.18
+  const siding = clip(pbr('siding', {
+    repeat: [2.8, 1.2], color: 0xbdb4a4, envMapIntensity: 0.3, normalScale: 0.9
   }));
-  const bois = clip(new THREE.MeshStandardMaterial({
-    map: textures.bois, color: 0xc7a67c, roughness: 0.7, metalness: 0, envMapIntensity: 0.3
+  const bois = clip(pbr('woodfloor', {
+    repeat: [1.6, 1.0], color: 0xcfa878, envMapIntensity: 0.3, normalScale: 0.8
   }));
-  const boisGris = clip(new THREE.MeshStandardMaterial({
-    map: textures.boisGris, color: 0xb9b2a4, roughness: 0.75, metalness: 0, envMapIntensity: 0.3
+  const charpente = clip(pbr('woodfloor', {
+    repeat: [2.4, 0.5], color: 0xb08a5e, envMapIntensity: 0.2, normalScale: 0.7
   }));
-  const vieillePierre = clip(new THREE.MeshStandardMaterial({
-    map: textures.vieillePierre, color: 0xcabfa6, roughness: 0.95, metalness: 0, envMapIntensity: 0.2
+  const beton = clip(pbr('concrete', {
+    repeat: [2.4, 2.4], color: 0xd6d0c2, envMapIntensity: 0.3, normalScale: 0.55
   }));
-  const beton = clip(new THREE.MeshStandardMaterial({
-    map: textures.beton, color: 0xcfc9bc, roughness: 0.82, metalness: 0, envMapIntensity: 0.3
+  const betonBrut = clip(pbr('concrete', {
+    repeat: [1.8, 1.8], color: 0xaba69b, envMapIntensity: 0.2, normalScale: 0.8
   }));
-  const betonBrut = clip(new THREE.MeshStandardMaterial({
-    map: textures.beton, color: 0xaaa79e, roughness: 0.9, metalness: 0, envMapIntensity: 0.2
+  const paving = clip(pbr('paving', {
+    repeat: [2.6, 2.6], color: 0xcdc6b6, envMapIntensity: 0.3, normalScale: 0.9
   }));
+  const planks = clip(pbr('planks', {
+    repeat: [2.2, 2.2], color: 0xbfa284, envMapIntensity: 0.3, normalScale: 0.85
+  }));
+  const vieillePierre = clip(pbr('stonewall2', {
+    repeat: [2.6, 1.4], color: 0xc4b79c, envMapIntensity: 0.2, normalScale: 1.3, roughness: 1
+  }));
+  const woodfloorInt = clip(pbr('woodfloor', {
+    repeat: [4, 4], color: 0xc9a97e, envMapIntensity: 0.35, normalScale: 0.6
+  }));
+
   const alu = clip(new THREE.MeshStandardMaterial({
     color: 0x2e3230, roughness: 0.45, metalness: 0.7, envMapIntensity: 0.7
   }));
+  const aluClair = clip(new THREE.MeshStandardMaterial({
+    color: 0x8a8d88, roughness: 0.35, metalness: 0.8, envMapIntensity: 0.9
+  }));
   const glass = clip(new THREE.MeshPhysicalMaterial({
     color: 0xa8bcb4, transparent: true, opacity: 0.16,
-    roughness: 0.06, metalness: 0, envMapIntensity: 1.4,
+    roughness: 0.06, metalness: 0, envMapIntensity: 1.5,
     side: THREE.DoubleSide, depthWrite: false,
     emissive: 0xffb267, emissiveIntensity: 0
   }));
-  const charpente = clip(new THREE.MeshStandardMaterial({
-    map: textures.bois, color: 0xb08d60, roughness: 0.8, metalness: 0, envMapIntensity: 0.2
-  }));
 
-  /* intérieur */
+  /* ── intérieur ── */
   const fabric = clip(new THREE.MeshStandardMaterial({
-    color: 0xcec3ab, roughness: 1, metalness: 0, envMapIntensity: 0.15
+    color: 0xd3c8b0, roughness: 1, metalness: 0, envMapIntensity: 0.15
   }));
   const fabricDark = clip(new THREE.MeshStandardMaterial({
-    color: 0x5d5a4e, roughness: 1, metalness: 0, envMapIntensity: 0.12
+    color: 0x635f52, roughness: 1, metalness: 0, envMapIntensity: 0.12
   }));
-  const noyer = clip(new THREE.MeshStandardMaterial({
-    map: textures.bois, color: 0x87643f, roughness: 0.65, metalness: 0, envMapIntensity: 0.3
+  const rideau = clip(new THREE.MeshStandardMaterial({
+    color: 0xe8e0cf, roughness: 1, metalness: 0, envMapIntensity: 0.1,
+    transparent: true, opacity: 0.55, side: THREE.DoubleSide, depthWrite: false
+  }));
+  const noyer = clip(pbr('woodfloor', {
+    repeat: [1.2, 0.8], color: 0x8a6742, envMapIntensity: 0.3, normalScale: 0.7
   }));
   const inkMetal = clip(new THREE.MeshStandardMaterial({
     color: 0x24211c, roughness: 0.5, metalness: 0.6, envMapIntensity: 0.5
@@ -72,27 +91,55 @@ export function makeMaterials(textures) {
   const ember = clip(new THREE.MeshStandardMaterial({
     color: 0x1a120a, emissive: 0xff9a4a, emissiveIntensity: 0, roughness: 1
   }));
+  const borne = new THREE.MeshStandardMaterial({
+    color: 0x2c2c28, emissive: 0xffc48a, emissiveIntensity: 0, roughness: 0.7, metalness: 0.3
+  });
   const plante = clip(new THREE.MeshStandardMaterial({
-    color: 0x39502e, roughness: 1, metalness: 0, envMapIntensity: 0.1, flatShading: true
+    color: 0x3d5430, roughness: 1, metalness: 0, envMapIntensity: 0.1, flatShading: true
   }));
 
-  /* paysage (non clippé) */
-  const prairie = new THREE.MeshStandardMaterial({
-    map: textures.prairie, color: 0xc3b998, roughness: 1, metalness: 0, envMapIntensity: 0.12
+  /* ── paysage (non clippé) ── */
+  const prairie = pbr('grass', {
+    repeat: [90, 70], color: 0xc9c2a2, envMapIntensity: 0.12, normalScale: 0.5
   });
-  const hill = new THREE.MeshStandardMaterial({ color: 0x33413a, roughness: 1, envMapIntensity: 0 });
-  const canopy = new THREE.MeshStandardMaterial({ color: 0x3d4a2e, roughness: 1, envMapIntensity: 0.06, flatShading: true });
-  const canopySombre = new THREE.MeshStandardMaterial({ color: 0x2a3a26, roughness: 1, envMapIntensity: 0.05, flatShading: true });
-  const trunk = new THREE.MeshStandardMaterial({ color: 0x4a3d2e, roughness: 1, envMapIntensity: 0 });
-  const gravier = new THREE.MeshStandardMaterial({
-    map: textures.beton, color: 0xc0b49a, roughness: 1, metalness: 0, envMapIntensity: 0.1
+  const gravier = pbr('gravel', {
+    repeat: [14, 10], color: 0xcfc5ae, envMapIntensity: 0.15, normalScale: 0.9
+  });
+  const terre = pbr('ground', {
+    repeat: [8, 8], color: 0xb59f82, envMapIntensity: 0.12, normalScale: 1
+  });
+  const roche = pbr('rock', {
+    repeat: [1.6, 1.2], color: 0xbdb3a0, envMapIntensity: 0.2, normalScale: 1.2
+  });
+  const soutenement = pbr('stonewall2', {
+    repeat: [4.5, 1.6], color: 0xc6bba4, envMapIntensity: 0.25, normalScale: 1.25
+  });
+  const hill = new THREE.MeshStandardMaterial({ color: 0x39473e, roughness: 1, envMapIntensity: 0 });
+  const canopy = new THREE.MeshStandardMaterial({ color: 0x4a5a38, roughness: 1, envMapIntensity: 0.06, flatShading: true });
+  const canopySombre = new THREE.MeshStandardMaterial({ color: 0x35462e, roughness: 1, envMapIntensity: 0.05, flatShading: true });
+  const trunk = new THREE.MeshStandardMaterial({ color: 0x584a38, roughness: 1, envMapIntensity: 0 });
+
+  /* ── chantier ── */
+  const engin = new THREE.MeshStandardMaterial({
+    color: 0xd9a13c, roughness: 0.5, metalness: 0.35, envMapIntensity: 0.5
+  });
+  const enginFonce = new THREE.MeshStandardMaterial({
+    color: 0x3a3a36, roughness: 0.7, metalness: 0.4, envMapIntensity: 0.3
+  });
+  const enginVitre = new THREE.MeshStandardMaterial({
+    color: 0x39464a, roughness: 0.15, metalness: 0.4, envMapIntensity: 0.9
+  });
+  const chenille = new THREE.MeshStandardMaterial({
+    color: 0x2b2b28, roughness: 0.95, metalness: 0.15, envMapIntensity: 0.15
   });
 
   return {
     buildPlane, clipped,
-    drystone, drystoneTall, galets, enduit, enduitFonce, tuiles, bois, boisGris,
-    vieillePierre, beton, betonBrut, alu, glass, charpente,
-    fabric, fabricDark, noyer, inkMetal, pendant, ember, plante,
-    prairie, hill, canopy, canopySombre, trunk, gravier
+    drystone, drystoneTall, enduit, enduitFonce, tuiles, siding, bois,
+    charpente, beton, betonBrut, paving, planks, vieillePierre, woodfloorInt,
+    alu, aluClair, glass,
+    fabric, fabricDark, rideau, noyer, inkMetal, pendant, ember, borne, plante,
+    prairie, gravier, terre, roche, soutenement, hill, canopy, canopySombre, trunk,
+    engin, enginFonce, enginVitre, chenille
   };
 }

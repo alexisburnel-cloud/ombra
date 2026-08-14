@@ -36,24 +36,116 @@
 
   <canvas id="gl" aria-hidden="true"></canvas>
 
-  <!-- ══════════ LOADER ══════════ -->
+  <!-- ══════════ LOADER — dossier d'architecte ══════════ -->
   <div class="loader" id="loader" role="status" aria-label="Chargement">
-    <svg class="loader-mark" id="loaderMark" viewBox="0 0 120 84" fill="none" aria-hidden="true">
-      <path class="lm" d="M8 76 L44 14 Q47 9 50 14 L60 31" />
-      <path class="lm" d="M60 31 Q76 44 86 62 Q90 69 92 76 L74 76 Q68 52 56 38" />
-      <path class="lm" d="M56 38 L34 76 L8 76" />
-    </svg>
-    <svg class="loader-topo" id="loaderTopo" viewBox="0 0 560 200" fill="none" aria-hidden="true">
-      <path class="lt" d="M10 176 C90 168 150 150 220 152 C300 154 330 170 420 168 C480 166 520 158 550 150" />
-      <path class="lt" d="M30 150 C100 140 160 118 230 122 C310 126 350 148 430 144 C490 140 520 132 552 124" />
-      <path class="lt" d="M60 122 C120 110 180 86 250 92 C320 98 360 122 440 116 C495 112 525 104 554 96" />
-      <path class="lt" d="M96 94 C150 82 210 58 274 64 C338 70 372 94 448 88" />
-      <path class="lt" d="M140 66 C190 56 240 34 296 40 C352 46 382 66 452 60" />
-      <path class="lt lt-a" d="M196 40 C236 32 270 16 316 20 C362 24 390 40 456 34" />
-    </svg>
-    <div class="loader-foot">
-      <span class="loader-pct" id="loadPct">000</span>
-      <span class="loader-tag">LECTURE DU TERRAIN — DRÔME · ARDÈCHE</span>
+    <div class="sheet">
+      <svg class="sheet-svg" id="sheetSvg" viewBox="0 0 1180 760" fill="none" aria-hidden="true">
+        <!-- cadre de planche -->
+        <rect class="bp bp-frame" x="28" y="28" width="1124" height="704" />
+        <rect class="bp bp-frame" x="36" y="36" width="1108" height="688" />
+
+        <!-- ÉLÉVATION SUD (haut gauche) -->
+        <g id="elev">
+          <text class="bp-cap" x="80" y="82">ÉLÉVATION SUD — ÉCH. 1:100</text>
+          <!-- sol -->
+          <path class="bp bp-heavy" d="M70 300 H700" />
+          <!-- séjour cathédrale : pignon -->
+          <path class="bp bp-heavy" d="M96 300 V208 L152 156 L208 208 V300" />
+          <path class="bp" d="M104 300 V214 L152 170 L200 214 V300" />
+          <path class="bp-hatch" d="M104 300 L200 214 M104 262 L162 210 M142 300 L200 248" />
+          <!-- corps central + voile pierre -->
+          <path class="bp bp-heavy" d="M208 300 V218 H430 V300" />
+          <path class="bp" d="M222 300 V262 H416 V300 M222 240 H416" />
+          <!-- attique -->
+          <path class="bp bp-heavy" d="M252 218 V164 H400 V218" />
+          <path class="bp" d="M262 190 H390 M262 202 H390" />
+          <!-- aile garage -->
+          <path class="bp bp-heavy" d="M430 300 V232 H640 V300" />
+          <path class="bp" d="M448 300 V252 H520 V300 M538 300 V252 H610 V300" />
+          <path class="bp-hatch" d="M448 296 H520 M448 288 H520 M538 296 H610 M538 288 H610" />
+          <!-- pergola -->
+          <path class="bp" d="M330 300 V254 H424 M338 254 V300 M354 262 H420 M354 270 H420" />
+          <!-- cotes -->
+          <path class="bp-dim" d="M96 322 H640 M96 316 V328 M640 316 V328 M330 316 V328" />
+          <text class="bp-txt" x="340" y="342">36,50</text>
+          <path class="bp-dim" d="M62 300 V156 M56 300 H68 M56 156 H68" />
+          <text class="bp-txt" x="42" y="232" transform="rotate(-90 42 232)">6,60</text>
+        </g>
+
+        <!-- PLAN MASSE (droite) -->
+        <g id="masse">
+          <text class="bp-cap" x="742" y="82">PLAN MASSE — ÉCH. 1:250</text>
+          <!-- courbes de niveau -->
+          <path class="bp-topo" d="M720 660 C800 640 880 650 960 630 C1040 610 1090 620 1130 600" />
+          <path class="bp-topo" d="M712 610 C790 590 870 600 950 578 C1030 556 1080 566 1126 546" />
+          <path class="bp-topo" d="M706 556 C784 538 864 546 944 524 C1024 502 1076 512 1122 492" />
+          <!-- villa -->
+          <rect class="bp bp-heavy" x="770" y="200" width="150" height="86" />
+          <rect class="bp bp-heavy" x="806" y="170" width="86" height="30" />
+          <rect class="bp" x="920" y="214" width="92" height="72" />
+          <!-- piscine -->
+          <rect class="bp bp-pool" x="948" y="320" width="104" height="42" />
+          <path class="bp-hatch" d="M954 356 L988 326 M972 360 L1006 330 M990 362 L1024 332" />
+          <!-- pergola + terrasses -->
+          <rect class="bp" x="806" y="292" width="96" height="44" />
+          <path class="bp" d="M812 298 H896 M812 306 H896 M812 314 H896 M812 322 H896 M812 330 H896" />
+          <rect class="bp" x="726" y="292" width="72" height="40" />
+          <!-- jacuzzi -->
+          <rect class="bp" x="700" y="296" width="24" height="24" />
+          <path class="bp" d="M703 299 L721 317 M721 299 L703 317" />
+          <!-- cour + accès -->
+          <path class="bp" d="M920 160 H1060 V214" />
+          <path class="bp-hatch" d="M932 168 L1052 168 M932 178 L1052 178 M932 188 L1052 188 M932 198 L1052 198" />
+          <path class="bp bp-dash" d="M1060 186 C1090 186 1104 200 1126 200" />
+          <!-- arbres -->
+          <circle class="bp" cx="742" cy="180" r="16" />
+          <circle class="bp" cx="1084" cy="250" r="13" />
+          <circle class="bp" cx="716" cy="380" r="18" />
+          <!-- nord -->
+          <circle class="bp" cx="1096" cy="120" r="15" />
+          <path class="bp" d="M1096 132 V108 L1090 118" />
+          <text class="bp-txt" x="1092" y="152">N</text>
+          <!-- cotes -->
+          <path class="bp-dim" d="M770 300 V286 M920 300 V286 M770 293 H920" />
+          <text class="bp-txt" x="830" y="310">36,50</text>
+        </g>
+
+        <!-- COUPE (bas gauche) -->
+        <g id="coupe">
+          <text class="bp-cap" x="80" y="432">COUPE AA′ — SÉJOUR CATHÉDRALE</text>
+          <path class="bp bp-heavy" d="M80 640 H420" />
+          <path class="bp bp-heavy" d="M120 640 V548 L210 486 L300 548 V640" />
+          <path class="bp" d="M132 640 V554 L210 498 L288 554 V640" />
+          <path class="bp" d="M132 596 H288" />
+          <path class="bp-hatch" d="M120 648 H300 M120 656 H300" />
+          <path class="bp-dim" d="M312 640 V486 M306 640 H318 M306 486 H318" />
+          <text class="bp-txt" x="326" y="568">6,60</text>
+          <!-- personnage échelle -->
+          <circle class="bp" cx="180" cy="600" r="6" />
+          <path class="bp" d="M180 606 V626 M180 612 L170 620 M180 612 L190 620 M180 626 L172 640 M180 626 L188 640" />
+        </g>
+
+        <!-- CARTOUCHE (bas droite) -->
+        <g id="cartouche">
+          <rect class="bp" x="742" y="470" width="392" height="196" />
+          <path class="bp" d="M742 512 H1134 M742 556 H1134 M742 600 H1134 M1006 512 V666" />
+          <text class="bp-cap" x="756" y="497">CARÈNE — CRÉATEUR DE LIEUX DE VIE</text>
+          <text class="bp-txt" x="756" y="540">ÉTUDE MANIFESTE — MAISON DE COTEAU</text>
+          <text class="bp-txt" x="1018" y="540">DRÔME·ARDÈCHE</text>
+          <text class="bp-txt" x="756" y="584">CONSTRUCTION &amp; RÉNOVATION</text>
+          <text class="bp-txt" x="1018" y="584">DEPUIS 1979</text>
+          <text class="bp-txt" x="756" y="630">PLANCHE 01 — DOSSIER D'ÉTUDE</text>
+          <text class="bp-txt" x="1018" y="630">ÉCH. 1:100</text>
+        </g>
+
+        <!-- tache de café, discrète -->
+        <circle class="bp-stain" cx="672" cy="700" r="26" />
+        <circle class="bp-stain" cx="672" cy="700" r="20" />
+      </svg>
+      <div class="loader-foot">
+        <span class="loader-pct" id="loadPct">000</span>
+        <span class="loader-tag">DOSSIER D'ÉTUDE — LECTURE DES PLANCHES</span>
+      </div>
     </div>
   </div>
 
