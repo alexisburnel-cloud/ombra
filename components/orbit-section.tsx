@@ -13,17 +13,15 @@ export function OrbitSection() {
     video.muted = true;
     video.playsInline = true;
     void video.play().catch(() => {
-      /* Safari peut bloquer la 1re tentative : on relance sans bouton,
-         à la première interaction (scroll ou toucher). */
+      /* iOS (mode éco d'énergie) exige un vrai geste : on relance au premier
+         tap ou clic, n'importe où — jamais de bouton. Le poster reste affiché
+         entre-temps : la maison est toujours visible. */
       const retry = () => {
         void video.play().catch(() => undefined);
-        window.removeEventListener("touchstart", retry);
-        window.removeEventListener("scroll", retry);
-        window.removeEventListener("pointerdown", retry);
       };
-      window.addEventListener("touchstart", retry, { passive: true, once: true });
+      window.addEventListener("touchend", retry, { passive: true, once: true });
+      window.addEventListener("click", retry, { once: true });
       window.addEventListener("scroll", retry, { passive: true, once: true });
-      window.addEventListener("pointerdown", retry, { passive: true, once: true });
     });
   }, []);
 
@@ -50,8 +48,9 @@ export function OrbitSection() {
       {/* portrait : la maison ENTIÈRE (object-contain) · paysage : plein cadre */}
       <video
         ref={videoRef}
-        className="max-h-screen w-full object-contain md:h-screen md:object-cover"
+        className="max-h-screen min-h-[42vh] w-full object-contain md:h-screen md:object-cover"
         src="/videos/orbit.mp4"
+        poster="/videos/orbit-poster.jpg"
         autoPlay
         muted
         loop
