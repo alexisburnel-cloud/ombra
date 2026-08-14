@@ -7,6 +7,9 @@ const REALISATIONS = [
   { src: "/photos/maison-galets.jpg", cat: "Maison", label: "Galets & œil-de-bœuf" },
   { src: "/photos/maison-piscine-soir.jpg", cat: "Villa", label: "Piscine & pergola" },
   { src: "/photos/maison-monopente.jpg", cat: "Maison", label: "Plain-pied monopente" },
+  { src: "/photos/real-2.jpg", cat: "Maison", label: "Volumes contemporains" },
+  { src: "/photos/maison-tour.jpg", cat: "Maison", label: "Signature d'angle" },
+  { src: "/photos/renovation-coteau.jpg", cat: "Rénovation", label: "Maison de coteau" },
 ];
 
 const DECENNIES = [
@@ -72,6 +75,32 @@ export function CareneSections() {
         </p>
       </section>
 
+      <section id="savoirfaire" className="bg-neutral-950 px-6 py-16 text-white md:px-16 md:py-28">
+        <p className="mb-4 text-xs uppercase tracking-[0.45em] text-[#5adfa5]">Construire, c&apos;est coordonner</p>
+        <h2 className="max-w-3xl text-4xl font-semibold leading-[0.95] tracking-[-0.05em] md:text-7xl">
+          Sept lots, un seul interlocuteur.
+        </h2>
+        <div className="mt-12 grid grid-cols-1 gap-x-10 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+          {[
+            ["01", "Fondations", "L'ancrage au terrain"],
+            ["02", "Dalle basse", "L'assise du projet"],
+            ["03", "Murs porteurs", "Pierre & maçonnerie"],
+            ["04", "Charpente", "L'ossature des volumes"],
+            ["05", "Couverture", "Hors d'eau"],
+            ["06", "Menuiseries", "Baies alu"],
+            ["07", "Finitions", "Terrasse & enduits"],
+          ].map(([num, lot, det]) => (
+            <div key={num} className="flex items-baseline gap-4 border-b border-white/10 pb-4">
+              <span className="text-xs font-semibold tracking-[0.2em] text-[#5adfa5]">{num}</span>
+              <div>
+                <span className="block text-lg font-semibold">{lot}</span>
+                <span className="text-sm text-white/50">{det}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <section id="equipe" className="bg-neutral-950 px-6 py-16 text-white md:px-16 md:py-28">
         <p className="mb-4 text-xs uppercase tracking-[0.45em] text-[#5adfa5]">Une vision commune</p>
         <h2 className="max-w-3xl text-4xl font-semibold leading-[0.95] tracking-[-0.05em] md:text-7xl">
@@ -118,6 +147,41 @@ export function CareneSections() {
               </span>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section id="faq" className="bg-[#0d1210] px-6 py-16 text-white md:px-16 md:py-28">
+        <p className="mb-4 text-xs uppercase tracking-[0.45em] text-[#5adfa5]">Questions fréquentes</p>
+        <h2 className="max-w-3xl text-4xl font-semibold leading-[0.95] tracking-[-0.05em] md:text-6xl">
+          Parlons concrètement.
+        </h2>
+        <div className="mt-10 max-w-3xl divide-y divide-white/10">
+          {[
+            [
+              "Où intervenez-vous ?",
+              "Principalement en Drôme et en Ardèche, mais également dans l'ensemble du quart sud-est de la France. Contactez-nous pour étudier la faisabilité de votre projet dans votre secteur.",
+            ],
+            [
+              "Quelles garanties proposez-vous ?",
+              "Toutes nos constructions bénéficient des garanties légales : garantie décennale (10 ans sur la structure), garantie de parfait achèvement (1 an après réception) et garantie biennale (2 ans sur les équipements).",
+            ],
+            [
+              "Combien de temps dure un projet ?",
+              "La durée varie selon la complexité et la nature du projet. En moyenne, comptez entre 10 et 14 mois de l'étude à la livraison — avec un planning précis dès la signature et un suivi rigoureux à chaque étape.",
+            ],
+            [
+              "Comment sont fixés vos budgets ?",
+              "Chaque projet est unique : nous travaillons sur-mesure, en fonction de vos envies, de votre terrain et de votre budget — avec un devis détaillé et transparent avant tout engagement. Nous pouvons aussi vous accompagner dans la recherche de votre terrain.",
+            ],
+          ].map(([q, a]) => (
+            <details key={q} className="group py-5">
+              <summary className="flex cursor-pointer list-none items-center justify-between text-base font-semibold md:text-lg">
+                {q}
+                <span className="ml-4 text-[#5adfa5] transition group-open:rotate-45">+</span>
+              </summary>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-white/60 md:text-base md:leading-7">{a}</p>
+            </details>
+          ))}
         </div>
       </section>
     </>
