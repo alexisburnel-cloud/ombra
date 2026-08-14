@@ -72,9 +72,9 @@ export class Villa {
 
     /* bassin à débordement */
     this.pool = new Water({ width: 9, depth: 4.6, calm: 0, scale: 1.15 });
-    this.pool.mesh.position.set(13.5, 0.16, 1.4);
+    this.pool.mesh.position.set(13.5, 0.2, 1.4);
     gFini.add(this.pool.mesh);
-    gFini.add(mesh(box(9.3, 0.1, 0.16), mats.inkMetal, 13.5, 0.1, 3.85, { cast: false }));
+    gFini.add(mesh(box(9.3, 0.1, 0.16), mats.inkMetal, 13.5, 0.16, 3.85, { cast: false }));
     /* bac débordement visible du jardin bas */
     gFini.add(mesh(box(9.3, 1.2, 0.3), mats.galets, 13.5, -0.9, 4.1));
 
