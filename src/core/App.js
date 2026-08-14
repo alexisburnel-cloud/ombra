@@ -67,6 +67,11 @@ export class App {
 
     this.post.setSize(innerWidth, innerHeight, this.stage.dpr);
     addEventListener('resize', () => this.onResize());
+    /* la page s'allonge quand les photos arrivent : recalibrer le mappage */
+    addEventListener('load', () => this.onResize());
+    document.querySelectorAll('img').forEach((img) => {
+      if (!img.complete) img.addEventListener('load', () => this.onResize(), { once: true });
+    });
 
     this.time = 0;
     gsap.ticker.add((t, dtMs) => this.update(t, Math.min(dtMs / 1000, 0.05)));
